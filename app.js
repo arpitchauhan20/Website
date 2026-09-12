@@ -557,40 +557,19 @@ function renderLogin() {
         <div class="login-orb login-orb-2"></div>
         <div class="login-orb login-orb-3"></div>
       </div>
-      <!-- Subtle Floating Sparkles -->
-      <div class="login-sparkles">
-        <span class="login-sparkle" style="top:12%;left:8%;animation-delay:0s">✦</span>
-        <span class="login-sparkle" style="top:25%;right:12%;animation-delay:1.2s">✧</span>
-        <span class="login-sparkle" style="bottom:20%;left:15%;animation-delay:0.6s">✦</span>
-        <span class="login-sparkle" style="top:60%;right:8%;animation-delay:1.8s">✧</span>
-        <span class="login-sparkle" style="top:8%;left:45%;animation-delay:0.3s">✨</span>
-      </div>
       
       <!-- Modern Split Card -->
       <div class="login-split-card">
-        <!-- Left Hero Image Showcase -->
+        <!-- Left Hero Image Showcase (Clean, text-free) -->
         <div class="login-hero-side">
           <img src="login-hero.jpg" alt="TeachTrack Educator Workspace" class="login-hero-img" onerror="this.src='https://images.unsplash.com/photo-1577896851231-70ef18881754?w=800&auto=format&fit=crop&q=80'">
-          <div class="login-hero-overlay">
-            <div class="login-hero-top">
-              <div class="login-glass-badge">✨ Teacher Academic Hub</div>
-            </div>
-            <div class="login-hero-pills">
-              <div class="login-glass-pill">📊 Curriculum & Progress Sync</div>
-              <div class="login-glass-pill">⭐ 4.9 Educator Rating</div>
-            </div>
-            <div class="login-hero-bottom">
-              <h2>Empower Every Lesson.</h2>
-              <p>Plan syllabi, track student mastery, and record teaching insights in one harmonious workspace.</p>
-            </div>
-          </div>
         </div>
 
         <!-- Right Form Panel -->
         <div class="login-form-side">
           <div class="login-form-header">
             <div class="login-brand-badge">
-              <span class="brand-badge-icon">📚</span>
+              <span class="brand-badge-dot"></span>
               <span class="brand-badge-text">TeachTrack</span>
             </div>
             <h1 class="login-form-title">Welcome Back</h1>
@@ -598,21 +577,19 @@ function renderLogin() {
           </div>
 
           <div class="login-demo-pill" onclick="document.getElementById('login-email').value='anita.sharma@school.edu';document.getElementById('login-password').value='password'" title="Click to autofill demo credentials">
-            <span>💡 <strong>Quick Demo:</strong> Prof. Anita Sharma</span>
+            <span><strong>Quick Demo:</strong> Prof. Anita Sharma</span>
           </div>
 
           <form class="login-form" id="login-form" onsubmit="event.preventDefault(); AppState.login();">
             <div class="login-field">
               <label for="login-email">Email Address</label>
               <div class="login-input-wrap">
-                <span class="login-input-icon">✉</span>
                 <input type="email" id="login-email" placeholder="anita.sharma@school.edu" value="anita.sharma@school.edu" required>
               </div>
             </div>
             <div class="login-field">
               <label for="login-password">Password</label>
               <div class="login-input-wrap">
-                <span class="login-input-icon">🔒</span>
                 <input type="password" id="login-password" placeholder="Enter your password" value="password" required>
               </div>
             </div>
@@ -643,25 +620,16 @@ function renderSignup() {
       </div>
       
       <div class="login-split-card">
-        <!-- Left Hero Image Showcase -->
+        <!-- Left Hero Image Showcase (Clean, text-free) -->
         <div class="login-hero-side">
           <img src="login-hero.jpg" alt="TeachTrack Educator Workspace" class="login-hero-img" onerror="this.src='https://images.unsplash.com/photo-1577896851231-70ef18881754?w=800&auto=format&fit=crop&q=80'">
-          <div class="login-hero-overlay">
-            <div class="login-hero-top">
-              <div class="login-glass-badge">🎓 Faculty Registration</div>
-            </div>
-            <div class="login-hero-bottom">
-              <h2>Join the Faculty Portal</h2>
-              <p>Everything you need for lesson planning, student tracking, and grading records.</p>
-            </div>
-          </div>
         </div>
 
         <!-- Right Form Panel -->
         <div class="login-form-side">
           <div class="login-form-header">
             <div class="login-brand-badge">
-              <span class="brand-badge-icon">📚</span>
+              <span class="brand-badge-dot"></span>
               <span class="brand-badge-text">TeachTrack</span>
             </div>
             <h1 class="login-form-title">Create Account</h1>
@@ -672,21 +640,18 @@ function renderSignup() {
             <div class="login-field">
               <label for="signup-name">Full Name</label>
               <div class="login-input-wrap">
-                <span class="login-input-icon">👤</span>
                 <input type="text" id="signup-name" placeholder="Prof. Anita Sharma" value="Prof. Anita Sharma" required>
               </div>
             </div>
             <div class="login-field">
               <label for="signup-email">Email Address</label>
               <div class="login-input-wrap">
-                <span class="login-input-icon">✉</span>
                 <input type="email" id="signup-email" placeholder="teacher@school.edu" value="anita.sharma@school.edu" required>
               </div>
             </div>
             <div class="login-field">
               <label for="signup-password">Password</label>
               <div class="login-input-wrap">
-                <span class="login-input-icon">🔒</span>
                 <input type="password" id="signup-password" placeholder="Create a secure password" value="password" required>
               </div>
             </div>
@@ -714,21 +679,12 @@ function renderForgotPassword() {
       <div class="login-split-card" id="forgot-card-wrapper">
         <div class="login-hero-side">
           <img src="login-hero.jpg" alt="TeachTrack Educator Workspace" class="login-hero-img" onerror="this.src='https://images.unsplash.com/photo-1577896851231-70ef18881754?w=800&auto=format&fit=crop&q=80'">
-          <div class="login-hero-overlay">
-            <div class="login-hero-top">
-              <div class="login-glass-badge">🔑 Account Recovery</div>
-            </div>
-            <div class="login-hero-bottom">
-              <h2>Secure Access</h2>
-              <p>Quick recovery for faculty credentials and classroom data access.</p>
-            </div>
-          </div>
         </div>
 
         <div class="login-form-side" id="forgot-card">
           <div class="login-form-header">
             <div class="login-brand-badge">
-              <span class="brand-badge-icon">🔑</span>
+              <span class="brand-badge-dot"></span>
               <span class="brand-badge-text">TeachTrack</span>
             </div>
             <h1 class="login-form-title">Reset Password</h1>
@@ -739,7 +695,6 @@ function renderForgotPassword() {
             <div class="login-field">
               <label for="forgot-email">Email Address</label>
               <div class="login-input-wrap">
-                <span class="login-input-icon">✉</span>
                 <input type="email" id="forgot-email" placeholder="teacher@school.edu" value="anita.sharma@school.edu" required>
               </div>
             </div>
@@ -761,8 +716,10 @@ function handleForgotSubmit() {
   if (card) {
     card.innerHTML = `
       <div style="text-align:center;padding:30px 10px;">
-        <div style="font-size:3.2rem;margin-bottom:14px;">✉️</div>
-        <h2 style="color:var(--neutral-900);font-size:1.6rem;font-weight:800;margin-bottom:8px;">Reset Link Sent!</h2>
+        <div style="width:56px;height:56px;margin:0 auto 16px;border-radius:50%;background:#FEECD0;display:flex;align-items:center;justify-content:center;color:#DCA278;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 17a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9.5C2 7 4 5 6.5 5H17.5C20 5 22 7 22 9.5V17z"/><polyline points="3 7 12 13 21 7"/></svg>
+        </div>
+        <h2 style="color:var(--neutral-900);font-size:1.6rem;font-weight:800;margin-bottom:8px;">Reset Link Sent</h2>
         <p style="color:var(--neutral-600);font-size:0.95rem;margin-bottom:28px;line-height:1.6;">Check your inbox for instructions to reset your teacher credentials.</p>
         <button class="login-submit-btn" onclick="AppState.currentPage='login'; renderApp();">
           <span class="login-btn-text">Back to Sign In</span>
@@ -840,7 +797,9 @@ function renderSidebar() {
       <div class="sidebar-resize-handle" id="sidebar-resize-handle" title="Drag to resize sidebar width"></div>
 
       <div class="sidebar-brand" onclick="AppState.navigate('dashboard')" style="cursor:pointer" data-tooltip="TeachTrack Academic Workspace">
-        <div class="sidebar-brand-icon">📚</div>
+        <div class="sidebar-brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
+        </div>
         <div class="sidebar-brand-text">
           <h2>TeachTrack</h2>
           <span>Academic Workspace</span>
@@ -915,7 +874,7 @@ function renderStudentSidebar() {
           <img src="${MOCK_DATA.user.avatarUrl}" class="sidebar-user-avatar" style="object-fit:cover;border-radius:50%">
           <div class="sidebar-user-info">
             <div class="sidebar-user-name">${MOCK_DATA.user.name}</div>
-            <div class="sidebar-user-role">View Faculty Card 👤</div>
+            <div class="sidebar-user-role">View Faculty Card</div>
           </div>
         </div>
         <div class="sidebar-toggle" onclick="AppState.toggleSidebar()" data-tooltip="${AppState.sidebarCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}">
