@@ -233,20 +233,20 @@ function closeModal() {
 // Speedometer Mood & Pedagogical Energy Engine
 // =====================================================
 const MOOD_EMOJIS = {
-  1: '😴',
-  2: '🌧️',
-  3: '🛋️',
-  4: '🌿',
-  5: '☕',
-  6: '📖',
-  7: '💡',
-  8: '✨',
-  9: '🎯',
-  10: '🌟'
+  1: '😫',
+  2: '😢',
+  3: '🙁',
+  4: '😐',
+  5: '🙂',
+  6: '😊',
+  7: '😄',
+  8: '😁',
+  9: '🤩',
+  10: '🥳'
 };
 
 function getMoodEmoji(score) {
-  return MOOD_EMOJIS[score] || '✨';
+  return MOOD_EMOJIS[score] || '🙂';
 }
 
 function getMoodZone(score) {
