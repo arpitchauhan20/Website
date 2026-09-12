@@ -593,11 +593,8 @@ function renderSpeedometer(score, containerId = 'speedometer-widget-main') {
         </div>
       </div>
 
-      <!-- Tactile Guidance Indicator -->
-      <div class="speedo-interactive-hint">
-        <span class="speedo-hint-icon">✥</span>
-        <span>Drag needle or tap dial to calibrate velocity</span>
-      </div>
+      <!-- Subtle Footnote Instruction -->
+      <div class="speedo-footnote-hint">Drag needle or tap dial to adjust score</div>
     </div>
   `;
 }
