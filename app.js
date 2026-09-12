@@ -551,58 +551,82 @@ function renderAuthPage() {
 function renderLogin() {
   return `
     <div class="login-page" id="auth-page">
-      <!-- Animated background -->
+      <!-- Animated Peach Background Orbs -->
       <div class="login-bg-orbs">
         <div class="login-orb login-orb-1"></div>
         <div class="login-orb login-orb-2"></div>
         <div class="login-orb login-orb-3"></div>
-        <div class="login-orb login-orb-4"></div>
       </div>
-      <!-- Floating sparkles -->
+      <!-- Subtle Floating Sparkles -->
       <div class="login-sparkles">
         <span class="login-sparkle" style="top:12%;left:8%;animation-delay:0s">✦</span>
         <span class="login-sparkle" style="top:25%;right:12%;animation-delay:1.2s">✧</span>
         <span class="login-sparkle" style="bottom:20%;left:15%;animation-delay:0.6s">✦</span>
         <span class="login-sparkle" style="top:60%;right:8%;animation-delay:1.8s">✧</span>
         <span class="login-sparkle" style="top:8%;left:45%;animation-delay:0.3s">✨</span>
-        <span class="login-sparkle" style="bottom:10%;right:25%;animation-delay:2.1s">✦</span>
       </div>
-      <div class="login-card">
-        <div class="login-brand">
-          <div class="login-brand-icon-wrap">
-            <div class="login-brand-icon">📚</div>
-            <div class="login-brand-glow"></div>
+      
+      <!-- Modern Split Card -->
+      <div class="login-split-card">
+        <!-- Left Hero Image Showcase -->
+        <div class="login-hero-side">
+          <img src="login-hero.jpg" alt="TeachTrack Educator Workspace" class="login-hero-img" onerror="this.src='https://images.unsplash.com/photo-1577896851231-70ef18881754?w=800&auto=format&fit=crop&q=80'">
+          <div class="login-hero-overlay">
+            <div class="login-hero-top">
+              <div class="login-glass-badge">✨ Teacher Academic Hub</div>
+            </div>
+            <div class="login-hero-pills">
+              <div class="login-glass-pill">📊 Curriculum & Progress Sync</div>
+              <div class="login-glass-pill">⭐ 4.9 Educator Rating</div>
+            </div>
+            <div class="login-hero-bottom">
+              <h2>Empower Every Lesson.</h2>
+              <p>Plan syllabi, track student mastery, and record teaching insights in one harmonious workspace.</p>
+            </div>
           </div>
-          <h1 class="login-title">TeachTrack</h1>
-          <p class="login-tagline">Plan. Teach. Record. Track.</p>
-          <div class="login-divider"><span>Welcome Back</span></div>
         </div>
-        <form class="login-form" id="login-form" onsubmit="event.preventDefault(); AppState.login();">
-          <div class="login-field">
-            <label for="login-email">Email Address</label>
-            <div class="login-input-wrap">
-              <span class="login-input-icon">✉</span>
-              <input type="email" id="login-email" placeholder="anita.sharma@school.edu" value="anita.sharma@school.edu" required>
+
+        <!-- Right Form Panel -->
+        <div class="login-form-side">
+          <div class="login-form-header">
+            <div class="login-brand-badge">
+              <span class="brand-badge-icon">📚</span>
+              <span class="brand-badge-text">TeachTrack</span>
             </div>
+            <h1 class="login-form-title">Welcome Back</h1>
+            <p class="login-form-subtitle">Enter your credentials to access your teacher workspace.</p>
           </div>
-          <div class="login-field">
-            <label for="login-password">Password</label>
-            <div class="login-input-wrap">
-              <span class="login-input-icon">🔒</span>
-              <input type="password" id="login-password" placeholder="Enter your password" value="password" required>
+
+          <div class="login-demo-pill" onclick="document.getElementById('login-email').value='anita.sharma@school.edu';document.getElementById('login-password').value='password'" title="Click to autofill demo credentials">
+            <span>💡 <strong>Quick Demo:</strong> Prof. Anita Sharma</span>
+          </div>
+
+          <form class="login-form" id="login-form" onsubmit="event.preventDefault(); AppState.login();">
+            <div class="login-field">
+              <label for="login-email">Email Address</label>
+              <div class="login-input-wrap">
+                <span class="login-input-icon">✉</span>
+                <input type="email" id="login-email" placeholder="anita.sharma@school.edu" value="anita.sharma@school.edu" required>
+              </div>
             </div>
+            <div class="login-field">
+              <label for="login-password">Password</label>
+              <div class="login-input-wrap">
+                <span class="login-input-icon">🔒</span>
+                <input type="password" id="login-password" placeholder="Enter your password" value="password" required>
+              </div>
+            </div>
+            <div class="login-options">
+              <label class="login-remember"><input type="checkbox" checked> <span>Remember me</span></label>
+              <a href="#" class="login-forgot" onclick="AppState.currentPage='forgot-password'; renderApp(); return false;">Forgot password?</a>
+            </div>
+            <button type="submit" class="login-submit-btn" id="login-submit-btn">
+              <span class="login-btn-text">Sign In</span>
+            </button>
+          </form>
+          <div class="login-footer">
+            Don't have an account? <a href="#" onclick="AppState.currentPage='signup'; renderApp(); return false;">Create account</a>
           </div>
-          <div class="login-options">
-            <label class="login-remember"><input type="checkbox" checked> <span>Remember me</span></label>
-            <a href="#" class="login-forgot" onclick="AppState.currentPage='forgot-password'; renderApp(); return false;">Forgot password?</a>
-          </div>
-          <button type="submit" class="login-submit-btn" id="login-submit-btn">
-            <span class="login-btn-text">Sign In</span>
-            <span class="login-btn-arrow">→</span>
-          </button>
-        </form>
-        <div class="login-footer">
-          Don't have an account? <a href="#" onclick="AppState.currentPage='signup'; renderApp(); return false;">Create account</a>
         </div>
       </div>
     </div>
@@ -617,45 +641,62 @@ function renderSignup() {
         <div class="login-orb login-orb-2"></div>
         <div class="login-orb login-orb-3"></div>
       </div>
-      <div class="login-card">
-        <div class="login-brand">
-          <div class="login-brand-icon-wrap">
-            <div class="login-brand-icon">📚</div>
-            <div class="login-brand-glow"></div>
+      
+      <div class="login-split-card">
+        <!-- Left Hero Image Showcase -->
+        <div class="login-hero-side">
+          <img src="login-hero.jpg" alt="TeachTrack Educator Workspace" class="login-hero-img" onerror="this.src='https://images.unsplash.com/photo-1577896851231-70ef18881754?w=800&auto=format&fit=crop&q=80'">
+          <div class="login-hero-overlay">
+            <div class="login-hero-top">
+              <div class="login-glass-badge">🎓 Faculty Registration</div>
+            </div>
+            <div class="login-hero-bottom">
+              <h2>Join the Faculty Portal</h2>
+              <p>Everything you need for lesson planning, student tracking, and grading records.</p>
+            </div>
           </div>
-          <h1 class="login-title">Create Account</h1>
-          <p class="login-tagline">Join TeachTrack Academic Portal</p>
-          <div class="login-divider"><span>Faculty Registration</span></div>
         </div>
-        <form class="login-form" id="signup-form" onsubmit="event.preventDefault(); AppState.login();">
-          <div class="login-field">
-            <label for="signup-name">Full Name</label>
-            <div class="login-input-wrap">
-              <span class="login-input-icon">👤</span>
-              <input type="text" id="signup-name" placeholder="Prof. Anita Sharma" value="Prof. Anita Sharma" required>
+
+        <!-- Right Form Panel -->
+        <div class="login-form-side">
+          <div class="login-form-header">
+            <div class="login-brand-badge">
+              <span class="brand-badge-icon">📚</span>
+              <span class="brand-badge-text">TeachTrack</span>
             </div>
+            <h1 class="login-form-title">Create Account</h1>
+            <p class="login-form-subtitle">Register your educator profile in seconds.</p>
           </div>
-          <div class="login-field">
-            <label for="signup-email">Email Address</label>
-            <div class="login-input-wrap">
-              <span class="login-input-icon">✉</span>
-              <input type="email" id="signup-email" placeholder="teacher@school.edu" value="anita.sharma@school.edu" required>
+
+          <form class="login-form" id="signup-form" onsubmit="event.preventDefault(); AppState.login();">
+            <div class="login-field">
+              <label for="signup-name">Full Name</label>
+              <div class="login-input-wrap">
+                <span class="login-input-icon">👤</span>
+                <input type="text" id="signup-name" placeholder="Prof. Anita Sharma" value="Prof. Anita Sharma" required>
+              </div>
             </div>
-          </div>
-          <div class="login-field">
-            <label for="signup-password">Password</label>
-            <div class="login-input-wrap">
-              <span class="login-input-icon">🔒</span>
-              <input type="password" id="signup-password" placeholder="Create a password" value="password" required>
+            <div class="login-field">
+              <label for="signup-email">Email Address</label>
+              <div class="login-input-wrap">
+                <span class="login-input-icon">✉</span>
+                <input type="email" id="signup-email" placeholder="teacher@school.edu" value="anita.sharma@school.edu" required>
+              </div>
             </div>
+            <div class="login-field">
+              <label for="signup-password">Password</label>
+              <div class="login-input-wrap">
+                <span class="login-input-icon">🔒</span>
+                <input type="password" id="signup-password" placeholder="Create a secure password" value="password" required>
+              </div>
+            </div>
+            <button type="submit" class="login-submit-btn">
+              <span class="login-btn-text">Create Account</span>
+            </button>
+          </form>
+          <div class="login-footer">
+            Already have an account? <a href="#" onclick="AppState.currentPage='login'; renderApp(); return false;">Sign in</a>
           </div>
-          <button type="submit" class="login-submit-btn">
-            <span class="login-btn-text">Create Account</span>
-            <span class="login-btn-arrow">→</span>
-          </button>
-        </form>
-        <div class="login-footer">
-          Already have an account? <a href="#" onclick="AppState.currentPage='login'; renderApp(); return false;">Sign in</a>
         </div>
       </div>
     </div>
@@ -669,31 +710,46 @@ function renderForgotPassword() {
         <div class="login-orb login-orb-1"></div>
         <div class="login-orb login-orb-2"></div>
       </div>
-      <div class="login-card" id="forgot-card">
-        <div class="login-brand">
-          <div class="login-brand-icon-wrap">
-            <div class="login-brand-icon">🔑</div>
-            <div class="login-brand-glow"></div>
-          </div>
-          <h1 class="login-title">Reset Password</h1>
-          <p class="login-tagline">Enter your email to receive a reset link</p>
-          <div class="login-divider"><span>Account Recovery</span></div>
-        </div>
-        <form class="login-form" id="forgot-form" onsubmit="event.preventDefault(); handleForgotSubmit();">
-          <div class="login-field">
-            <label for="forgot-email">Email Address</label>
-            <div class="login-input-wrap">
-              <span class="login-input-icon">✉</span>
-              <input type="email" id="forgot-email" placeholder="teacher@school.edu" value="anita.sharma@school.edu" required>
+      
+      <div class="login-split-card" id="forgot-card-wrapper">
+        <div class="login-hero-side">
+          <img src="login-hero.jpg" alt="TeachTrack Educator Workspace" class="login-hero-img" onerror="this.src='https://images.unsplash.com/photo-1577896851231-70ef18881754?w=800&auto=format&fit=crop&q=80'">
+          <div class="login-hero-overlay">
+            <div class="login-hero-top">
+              <div class="login-glass-badge">🔑 Account Recovery</div>
+            </div>
+            <div class="login-hero-bottom">
+              <h2>Secure Access</h2>
+              <p>Quick recovery for faculty credentials and classroom data access.</p>
             </div>
           </div>
-          <button type="submit" class="login-submit-btn">
-            <span class="login-btn-text">Send Reset Link</span>
-            <span class="login-btn-arrow">→</span>
-          </button>
-        </form>
-        <div class="login-footer">
-          Remember your password? <a href="#" onclick="AppState.currentPage='login'; renderApp(); return false;">Back to Sign In</a>
+        </div>
+
+        <div class="login-form-side" id="forgot-card">
+          <div class="login-form-header">
+            <div class="login-brand-badge">
+              <span class="brand-badge-icon">🔑</span>
+              <span class="brand-badge-text">TeachTrack</span>
+            </div>
+            <h1 class="login-form-title">Reset Password</h1>
+            <p class="login-form-subtitle">Enter your institutional email to receive a recovery link.</p>
+          </div>
+
+          <form class="login-form" id="forgot-form" onsubmit="event.preventDefault(); handleForgotSubmit();">
+            <div class="login-field">
+              <label for="forgot-email">Email Address</label>
+              <div class="login-input-wrap">
+                <span class="login-input-icon">✉</span>
+                <input type="email" id="forgot-email" placeholder="teacher@school.edu" value="anita.sharma@school.edu" required>
+              </div>
+            </div>
+            <button type="submit" class="login-submit-btn">
+              <span class="login-btn-text">Send Reset Link</span>
+            </button>
+          </form>
+          <div class="login-footer">
+            Remember your password? <a href="#" onclick="AppState.currentPage='login'; renderApp(); return false;">Back to Sign In</a>
+          </div>
         </div>
       </div>
     </div>
@@ -704,10 +760,10 @@ function handleForgotSubmit() {
   const card = document.getElementById('forgot-card');
   if (card) {
     card.innerHTML = `
-      <div style="text-align:center;padding:20px 10px;">
-        <div style="font-size:3rem;margin-bottom:12px;">✉️</div>
-        <h2 style="color:#ffffff;font-size:1.5rem;font-weight:700;margin-bottom:8px;">Reset Link Sent!</h2>
-        <p style="color:rgba(255,255,255,0.7);font-size:0.9rem;margin-bottom:24px;line-height:1.5;">Check your inbox for instructions to reset your teacher credentials.</p>
+      <div style="text-align:center;padding:30px 10px;">
+        <div style="font-size:3.2rem;margin-bottom:14px;">✉️</div>
+        <h2 style="color:var(--neutral-900);font-size:1.6rem;font-weight:800;margin-bottom:8px;">Reset Link Sent!</h2>
+        <p style="color:var(--neutral-600);font-size:0.95rem;margin-bottom:28px;line-height:1.6;">Check your inbox for instructions to reset your teacher credentials.</p>
         <button class="login-submit-btn" onclick="AppState.currentPage='login'; renderApp();">
           <span class="login-btn-text">Back to Sign In</span>
         </button>
@@ -4105,7 +4161,7 @@ function renderProfile() {
       </div>
       <div class="page-header-actions">
         <button class="btn btn-primary" onclick="showEditProfileModal()">✏️ Edit Profile</button>
-        <button class="btn btn-secondary" onclick="AppState.logout()">Sign Out 🚪</button>
+        <button class="btn btn-secondary" onclick="AppState.logout()">Sign Out</button>
       </div>
     </div>
 
@@ -4324,7 +4380,7 @@ function showTeacherProfileModal() {
       </div>
     </div>
     <div class="modal-footer" style="display:flex;justify-content:space-between">
-      <button class="btn btn-secondary btn-sm" onclick="closeModal(); AppState.logout();" style="color:var(--danger-500)">🚪 Sign Out</button>
+      <button class="btn btn-secondary btn-sm" onclick="closeModal(); AppState.logout();" style="color:var(--danger-500)">Sign Out</button>
       <div class="flex gap-2">
         <button class="btn btn-secondary btn-sm" onclick="closeModal()">Close</button>
         <button class="btn btn-primary btn-sm" onclick="closeModal(); showEditProfileModal()">✏️ Edit Profile</button>
