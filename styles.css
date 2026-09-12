@@ -4229,13 +4229,14 @@ body.sidebar-resizing .main-content {
   transition: all 0.3s ease;
 }
 
-/* Subtle Footnote Instruction - Quiet, ignorable normal text */
+/* Subtle Footnote Instruction - Bottom Right with clean padding */
 .speedo-footnote-hint {
   font-size: 11px;
   font-weight: 400;
   color: var(--neutral-400);
   margin-top: 10px;
-  align-self: flex-start;
+  align-self: flex-end;
+  padding: 0 8px 4px 0;
   opacity: 0.6;
   user-select: none;
   pointer-events: none;

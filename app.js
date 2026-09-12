@@ -594,7 +594,7 @@ function renderSpeedometer(score, containerId = 'speedometer-widget-main') {
       </div>
 
       <!-- Subtle Footnote Instruction -->
-      <div class="speedo-footnote-hint">Drag needle or tap dial to adjust score</div>
+      <div class="speedo-footnote-hint">Drag or tap to adjust</div>
     </div>
   `;
 }
