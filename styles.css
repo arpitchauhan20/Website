@@ -4158,6 +4158,20 @@ body.sidebar-resizing .main-content {
   transition: transform 0.2s ease;
 }
 
+.speedo-emoji {
+  font-size: 11px;
+  user-select: none;
+  pointer-events: none;
+  opacity: 0.65;
+  transition: all 0.2s ease;
+}
+
+.speedo-emoji.active {
+  opacity: 1;
+  font-size: 14px;
+  filter: drop-shadow(0 2px 6px rgba(220, 162, 120, 0.6));
+}
+
 /* Digital Readout below Needle Hub */
 .speedometer-digital-readout {
   text-align: center;
@@ -4169,9 +4183,22 @@ body.sidebar-resizing .main-content {
 
 .speedo-score-row {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 8px;
+}
+
+.speedo-live-emoji {
+  font-size: 1.8rem;
+  line-height: 1;
+  transition: transform 0.2s ease;
+  animation: popBounce 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popBounce {
+  0% { transform: scale(0.7); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
 }
 
 .speedo-score-number {

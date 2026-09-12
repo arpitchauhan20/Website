@@ -232,6 +232,23 @@ function closeModal() {
 // =====================================================
 // Speedometer Mood & Pedagogical Energy Engine
 // =====================================================
+const MOOD_EMOJIS = {
+  1: '😴',
+  2: '🌧️',
+  3: '🛋️',
+  4: '🌿',
+  5: '☕',
+  6: '📖',
+  7: '💡',
+  8: '✨',
+  9: '🎯',
+  10: '🌟'
+};
+
+function getMoodEmoji(score) {
+  return MOOD_EMOJIS[score] || '✨';
+}
+
 function getMoodZone(score) {
   if (score <= 3) return 'zone-recharge';
   if (score <= 6) return 'zone-steady';
@@ -280,19 +297,20 @@ function updateSpeedoZoneDOM(zoneEl, txtEl, score, containerId) {
   if (txtEl) {
     txtEl.textContent = getMoodLabel(score);
   }
+  const emoji = getMoodEmoji(score);
   if (containerId) {
-    const aura = document.getElementById(`${containerId}-aura`);
-    if (aura) aura.className = `speedo-ambient-aura ${zone}`;
+    const emojiEl = document.getElementById(`${containerId}-emoji`);
+    if (emojiEl) emojiEl.textContent = emoji;
   } else {
-    document.querySelectorAll('.speedo-ambient-aura').forEach(aura => {
-      aura.className = `speedo-ambient-aura ${zone}`;
+    document.querySelectorAll('.speedo-live-emoji').forEach(el => {
+      el.textContent = emoji;
     });
   }
   const headerPill = document.querySelector('.speedo-header-zone-pill');
   if (headerPill) {
     headerPill.className = `speedo-header-zone-pill ${zone}`;
     const span = headerPill.querySelector('span:last-child');
-    if (span) span.textContent = getMoodZoneLabel(score);
+    if (span) span.textContent = `${emoji} ${getMoodZoneLabel(score)}`;
   }
 }
 
@@ -388,8 +406,8 @@ function runSpeedometerSweepAnimation(containerId = 'speedometer-widget-main') {
             AppState.selectedMoodQuote = getQuoteForMood(5);
             updateDashboardReflectionQuote(5);
 
-            // Highlight 5 as active tick
-            widget.querySelectorAll('.speedo-tick, .speedo-number').forEach(el => {
+            // Highlight 5 as active tick and emoji
+            widget.querySelectorAll('.speedo-tick, .speedo-number, .speedo-emoji').forEach(el => {
               const num = parseInt(el.getAttribute('data-tick'));
               if (num === 5) el.classList.add('active');
               else el.classList.remove('active');
@@ -426,7 +444,7 @@ function initSpeedometerInteractivity(containerId = 'speedometer-widget-main') {
     if (valDisplay) valDisplay.textContent = score;
     updateSpeedoZoneDOM(zoneDisplay, zoneTxt, score);
 
-    widget.querySelectorAll('.speedo-tick, .speedo-number').forEach(el => {
+    widget.querySelectorAll('.speedo-tick, .speedo-number, .speedo-emoji').forEach(el => {
       const s = parseInt(el.getAttribute('data-tick'));
       if (s === score) el.classList.add('active');
       else el.classList.remove('active');
@@ -487,7 +505,7 @@ function initSpeedometerInteractivity(containerId = 'speedometer-widget-main') {
 function renderSpeedometer(score, containerId = 'speedometer-widget-main') {
   const angle = getAngleForScore(score);
   
-  // Clean Major Ticks & Numbers (1 to 10)
+  // Clean Major Ticks, Numbers (1 to 10) and Small Emojis
   let ticksHtml = '';
   for (let s = 1; s <= 10; s++) {
     const a = getAngleForScore(s);
@@ -498,14 +516,19 @@ function renderSpeedometer(score, containerId = 'speedometer-widget-main') {
     const x2 = Math.round(170 + 96 * Math.cos(rad));
     const y2 = Math.round(152 + 96 * Math.sin(rad));
     
-    // Numbers outside arc (radius 128) - zero overlap!
-    const tx = Math.round(170 + 128 * Math.cos(rad));
-    const ty = Math.round(152 + 128 * Math.sin(rad));
+    // Numbers outside arc (radius 122)
+    const tx = Math.round(170 + 122 * Math.cos(rad));
+    const ty = Math.round(152 + 122 * Math.sin(rad));
+
+    // Small Emojis outside numbers (radius 142)
+    const ex = Math.round(170 + 142 * Math.cos(rad));
+    const ey = Math.round(152 + 142 * Math.sin(rad));
     const isSelected = s === score;
 
     ticksHtml += `
       <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="speedo-tick ${isSelected ? 'active' : ''}" data-tick="${s}" />
       <text x="${tx}" y="${ty + 4}" class="speedo-number ${isSelected ? 'active' : ''}" data-tick="${s}" text-anchor="middle">${s}</text>
+      <text x="${ex}" y="${ey + 4}" class="speedo-emoji ${isSelected ? 'active' : ''}" data-tick="${s}" text-anchor="middle" font-size="10.5">${getMoodEmoji(s)}</text>
     `;
   }
 
@@ -514,7 +537,7 @@ function renderSpeedometer(score, containerId = 'speedometer-widget-main') {
   return `
     <div class="speedometer-widget" id="${containerId}">
       <div class="speedometer-dial-container" title="Drag needle or click dial to calibrate teaching velocity">
-        <svg viewBox="0 0 340 185" class="speedometer-svg" id="${containerId}-svg" aria-label="Teacher Mood Meter Gauge">
+        <svg viewBox="0 0 340 192" class="speedometer-svg" id="${containerId}-svg" aria-label="Teacher Mood Meter Gauge">
           <defs>
             <!-- Smooth Continuous Multi-Stop Gradient -->
             <linearGradient id="speedoTrackGrad" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -535,7 +558,7 @@ function renderSpeedometer(score, containerId = 'speedometer-widget-main') {
           <!-- Colored Active Gradient Arc -->
           <path d="M 67.6,124.6 A 106,106 0 0,1 272.4,124.6" class="speedo-track-active" fill="none" stroke="url(#speedoTrackGrad)" stroke-width="12" stroke-linecap="round" />
 
-          <!-- Ticks and Numbers -->
+          <!-- Ticks, Numbers & Emojis -->
           <g class="speedo-ticks-group">
             ${ticksHtml}
           </g>
@@ -560,6 +583,7 @@ function renderSpeedometer(score, containerId = 'speedometer-widget-main') {
       <!-- Center Digital Gauge Readout -->
       <div class="speedometer-digital-readout">
         <div class="speedo-score-row">
+          <span class="speedo-live-emoji" id="${containerId}-emoji">${getMoodEmoji(score)}</span>
           <span class="speedo-score-number" id="${containerId}-val">${score}</span>
           <span class="speedo-score-denom">/ 10</span>
         </div>
