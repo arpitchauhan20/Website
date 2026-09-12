@@ -272,12 +272,27 @@ function selectMood(score) {
   renderApp();
 }
   
-function updateSpeedoZoneDOM(zoneEl, txtEl, score) {
+function updateSpeedoZoneDOM(zoneEl, txtEl, score, containerId) {
+  const zone = getMoodZone(score);
   if (zoneEl) {
-    zoneEl.className = `speedo-zone-pill ${getMoodZone(score)}`;
+    zoneEl.className = `speedo-zone-pill ${zone}`;
   }
   if (txtEl) {
     txtEl.textContent = getMoodLabel(score);
+  }
+  if (containerId) {
+    const aura = document.getElementById(`${containerId}-aura`);
+    if (aura) aura.className = `speedo-ambient-aura ${zone}`;
+  } else {
+    document.querySelectorAll('.speedo-ambient-aura').forEach(aura => {
+      aura.className = `speedo-ambient-aura ${zone}`;
+    });
+  }
+  const headerPill = document.querySelector('.speedo-header-zone-pill');
+  if (headerPill) {
+    headerPill.className = `speedo-header-zone-pill ${zone}`;
+    const span = headerPill.querySelector('span:last-child');
+    if (span) span.textContent = getMoodZoneLabel(score);
   }
 }
 
