@@ -4,13 +4,13 @@
 // =====================================================
 
 const MOCK_DATA = {
-  // Current user / Teacher Profile Data — Prof. Ishita Sharma
+  // Current user / Teacher Profile Data — Prof. Ishita Chopra
   user: {
     id: 'u1',
-    name: 'Ishita Sharma',
-    email: 'ishita.sharma@school.edu',
-    role: 'Senior TGT English Literature & Language',
-    initials: 'IS',
+    name: 'Ishita Chopra',
+    email: 'ishita.chopra@school.edu',
+    role: 'Senior PGT Literature Educator',
+    initials: 'IC',
     employeeId: 'TCH-2018-0842',
     qualification: 'M.A. English Literature, B.Ed. (Gold Medalist)',
     phone: '+91 98765 43210',

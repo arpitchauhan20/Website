@@ -886,7 +886,7 @@ function renderLogin() {
           <!-- Instant 1-Click Demo Entry -->
           <button type="button" class="btn-demo-instant" onclick="AppState.login()" title="Launch Faculty Dashboard immediately">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            <span>Launch Dashboard (Prof. Ishita Sharma)</span>
+            <span>Launch Dashboard (Prof. Ishita Chopra)</span>
           </button>
 
           <div class="login-divider-text">
@@ -897,7 +897,7 @@ function renderLogin() {
             <div class="login-field">
               <label for="login-email">Faculty Email (Demo)</label>
               <div class="login-input-wrap">
-                <input type="email" id="login-email" autocomplete="off" placeholder="ishita.sharma@demo.teachtrack.io" value="ishita.sharma@demo.teachtrack.io" required>
+                <input type="email" id="login-email" autocomplete="off" placeholder="ishita.chopra@demo.teachtrack.io" value="ishita.chopra@demo.teachtrack.io" required>
               </div>
             </div>
             <div class="login-field">
@@ -954,13 +954,13 @@ function renderSignup() {
             <div class="login-field">
               <label for="signup-name">Faculty Full Name</label>
               <div class="login-input-wrap">
-                <input type="text" id="signup-name" autocomplete="off" placeholder="Prof. Ishita Sharma" value="Prof. Ishita Sharma" required>
+                <input type="text" id="signup-name" autocomplete="off" placeholder="Prof. Ishita Chopra" value="Prof. Ishita Chopra" required>
               </div>
             </div>
             <div class="login-field">
               <label for="signup-email">Faculty Email (Demo)</label>
               <div class="login-input-wrap">
-                <input type="email" id="signup-email" autocomplete="off" placeholder="ishita.sharma@demo.teachtrack.io" value="ishita.sharma@demo.teachtrack.io" required>
+                <input type="email" id="signup-email" autocomplete="off" placeholder="ishita.chopra@demo.teachtrack.io" value="ishita.chopra@demo.teachtrack.io" required>
               </div>
             </div>
             <div class="login-field">
@@ -1010,7 +1010,7 @@ function renderForgotPassword() {
             <div class="login-field">
               <label for="forgot-email">Faculty Email (Demo)</label>
               <div class="login-input-wrap">
-                <input type="email" id="forgot-email" autocomplete="off" placeholder="ishita.sharma@demo.teachtrack.io" value="ishita.sharma@demo.teachtrack.io" required>
+                <input type="email" id="forgot-email" autocomplete="off" placeholder="ishita.chopra@demo.teachtrack.io" value="ishita.chopra@demo.teachtrack.io" required>
               </div>
             </div>
             <button type="submit" class="login-submit-btn">
@@ -1095,15 +1095,15 @@ function renderSidebar() {
     return renderStudentSidebar();
   }
 
-  // Standard Main Menu items (without separate profile and without welcome mood)
+  // Standard Main Menu items (with clean line-art SVG icons)
   const navItems = [
-    { id: 'dashboard', icon: '📊', label: 'Dashboard' },
-    { id: 'journal', icon: '🔒', label: 'Daily Safe', badge: MOCK_DATA.teacherSafeJournal.length || null },
-    { id: 'classes', icon: '🏫', label: 'Classes' },
-    { id: 'students', icon: '👨‍🎓', label: 'Students & Quizzes' },
-    { id: 'materials', icon: '📚', label: 'Materials & Logs' },
-    { id: 'syllabus', icon: '📋', label: 'Syllabus Tracker' },
-    { id: 'reports', icon: '📈', label: 'Reports' },
+    { id: 'dashboard', icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg>`, label: 'Dashboard' },
+    { id: 'journal', icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`, label: 'Daily Safe', badge: MOCK_DATA.teacherSafeJournal.length || null },
+    { id: 'classes', icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>`, label: 'Classes' },
+    { id: 'students', icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>`, label: 'Students' },
+    { id: 'materials', icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`, label: 'Materials & Logs' },
+    { id: 'syllabus', icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>`, label: 'Syllabus Tracker' },
+    { id: 'reports', icon: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>`, label: 'Reports' },
   ];
 
   return `
@@ -1149,6 +1149,11 @@ function renderSidebar() {
   `;
 }
 
+function getStudentCartoonAvatar(name) {
+  const seed = encodeURIComponent(name || 'student');
+  return `https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
+}
+
 function renderStudentSidebar() {
   const currentStudentId = AppState.pageParams?.studentId || AppState.activeStudentId || 's1';
   const sortedStudents = getSortedStudents(MOCK_DATA.students);
@@ -1161,7 +1166,7 @@ function renderStudentSidebar() {
       <!-- Back to Default Workspace Menu Button -->
       <div class="sidebar-student-header">
         <button class="sidebar-student-back-btn" onclick="AppState.navigate('students')" title="Close and return to default navigation" data-tooltip="Back to Menu">
-          <span class="back-icon">←</span>
+          <span class="back-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg></span>
           <span class="back-text">Back to Menu</span>
         </button>
         <input type="text" class="sidebar-student-search" placeholder="Search student..." oninput="filterSidebarStudents(this.value)" id="sidebar-student-search-input">
@@ -1173,7 +1178,7 @@ function renderStudentSidebar() {
           <div class="sidebar-student-item ${st.id === currentStudentId ? 'active' : ''}"
                onclick="switchDetailStudent('${st.id}')"
                data-tooltip="${st.name} (Roll #${st.rollNo} • ${getClassName(st.classId)})">
-            <img src="${st.photo}" class="sidebar-student-item-avatar" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'">
+            <img src="${getStudentCartoonAvatar(st.name)}" class="sidebar-student-item-avatar">
             <div class="sidebar-student-item-info">
               <div class="sidebar-student-item-name">${st.name}</div>
               <div class="sidebar-student-item-meta">Roll #${st.rollNo} • ${getClassName(st.classId)}</div>
@@ -2056,13 +2061,17 @@ function renderJournal() {
       </div>
     </div>
 
-    <div class="calendar-safe-wrapper stagger-children">
-      <!-- Left: Interactive Calendar -->
-      <div>
+    <div class="calendar-safe-stacked-layout stagger-children">
+      <!-- Calendar Card (Top) -->
+      <div class="card card-elevated" style="padding:var(--space-6)">
         <div class="calendar-header-controls">
-          <button class="btn btn-ghost btn-sm" onclick="changeCalendarMonth(-1)">◀ Previous</button>
-          <h3 style="font-size:1.2rem;font-weight:700;color:var(--neutral-800)">${monthName} ${year}</h3>
-          <button class="btn btn-ghost btn-sm" onclick="changeCalendarMonth(1)">Next ▶</button>
+          <button class="btn btn-ghost btn-sm" onclick="changeCalendarMonth(-1)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px"><polyline points="15 18 9 12 15 6"></polyline></svg> Previous
+          </button>
+          <h3 style="font-size:1.25rem;font-weight:700;color:var(--neutral-800)">${monthName} ${year}</h3>
+          <button class="btn btn-ghost btn-sm" onclick="changeCalendarMonth(1)">
+            Next <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
         </div>
 
         <div class="calendar-grid-header">
@@ -2090,26 +2099,26 @@ function renderJournal() {
           }).join('')}
         </div>
 
-        <div class="text-xs text-muted mt-4">
-          💡 <em>Tip: Click any day to read or record your reflections. Attached emoji stickers will show directly on that date!</em>
+        <div class="text-xs text-muted mt-4 text-center">
+          <em>Click any date to record or edit your reflection notes and stickers below.</em>
         </div>
       </div>
 
-      <!-- Right: Daily Experience & Sticker Picker -->
-      <div class="safe-entry-pane">
-        <div class="flex items-center justify-between">
+      <!-- Daily Reflection Editor (Bottom of Calendar) -->
+      <div class="card card-elevated safe-entry-bottom-card mt-6" style="padding:var(--space-6)">
+        <div class="flex items-center justify-between pb-4 mb-4" style="border-bottom:1px solid rgba(220,162,120,0.25)">
           <div>
-            <h3 style="font-size:1.15rem;font-weight:700;color:var(--neutral-800)">
+            <h3 style="font-size:1.25rem;font-weight:700;color:var(--neutral-800)">
               Daily Reflection: ${formatDate(selectedDate)}
             </h3>
-            <span class="text-xs text-muted">Safe Entry: ${activeEntry ? 'Recorded' : 'Not yet saved'}</span>
+            <span class="text-xs text-muted">Safe Entry: ${activeEntry ? 'Recorded & Protected' : 'Draft / New'}</span>
           </div>
-          <span class="badge badge-green">${activeEntry ? 'Saved in Safe' : 'Draft'}</span>
+          <span class="badge ${activeEntry ? 'badge-green' : 'badge-amber'}">${activeEntry ? 'Saved in Safe' : 'Draft'}</span>
         </div>
 
         <!-- Emoji Sticker Bar -->
-        <div>
-          <label class="form-label mb-2" style="display:block">Click Emoji Stickers to attach to this day:</label>
+        <div class="mb-4">
+          <label class="form-label mb-2" style="display:block;font-weight:600">Attached Emoji Mood Stickers:</label>
           <div class="emoji-sticker-picker">
             ${availableStickers.map(emoji => {
               const hasSticker = activeStickers.includes(emoji);
@@ -2124,22 +2133,22 @@ function renderJournal() {
           </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Entry Title</label>
+        <div class="form-group mb-4">
+          <label class="form-label" style="font-weight:600">Reflection Title</label>
           <input type="text" class="form-input" id="safe-entry-title"
                  placeholder="e.g., A breakthrough moment in Class 6A"
                  value="${activeEntry ? activeEntry.title.replace(/"/g, '&quot;') : ''}">
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Daily Classroom Experience & Feelings</label>
+        <div class="form-group mb-4">
+          <label class="form-label" style="font-weight:600">Daily Classroom Experience & Pedagogical Reflections</label>
           <textarea class="form-textarea" id="safe-entry-text" rows="5"
                     placeholder="Describe how your classes went today, student breakthroughs, moments of joy, or challenges you encountered...">${activeEntry ? activeEntry.experience : ''}</textarea>
         </div>
 
-        <div class="form-row">
+        <div class="form-row mb-4">
           <div class="form-group" style="flex:1">
-            <label class="form-label">Day's Mood Score (1-10)</label>
+            <label class="form-label" style="font-weight:600">Day's Mood Score (1-10)</label>
             <select class="form-select" id="safe-entry-mood">
               ${[1,2,3,4,5,6,7,8,9,10].map(s => `
                 <option value="${s}" ${(activeEntry ? activeEntry.moodScore === s : AppState.currentMood === s) ? 'selected' : ''}>
@@ -2150,35 +2159,11 @@ function renderJournal() {
           </div>
         </div>
 
-        <button class="btn btn-primary" onclick="saveSafeReflection('${selectedDate}')" style="align-self:flex-start">
-          🔒 Save Reflection in Safe
-        </button>
-      </div>
-    </div>
-
-    <!-- Recent Safe Entries Stream -->
-    <div class="card card-elevated mt-6">
-      <div class="card-header">
-        <h3 class="card-title">Past Reflections & Highlights</h3>
-      </div>
-      <div class="card-body">
-        <div class="activity-list">
-          ${MOCK_DATA.teacherSafeJournal.map(entry => `
-            <div class="activity-item" style="cursor:pointer" onclick="selectCalendarDate('${entry.date}')">
-              <div class="activity-dot green"></div>
-              <div style="flex:1">
-                <div class="flex items-center justify-between">
-                  <span class="font-semibold text-sm">${entry.title}</span>
-                  <span class="text-xs text-muted">${formatDate(entry.date)}</span>
-                </div>
-                <div class="text-xs mt-1" style="color:var(--neutral-600)">${entry.experience}</div>
-                <div class="flex items-center gap-2 mt-2">
-                  <span style="font-size:1.1rem">${entry.emojiStickers.join(' ')}</span>
-                  <span class="badge badge-neutral text-xs">Mood: ${entry.moodScore}/10</span>
-                </div>
-              </div>
-            </div>
-          `).join('')}
+        <div class="flex items-center gap-3">
+          <button class="btn btn-primary" onclick="saveSafeReflection('${selectedDate}')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+            Save Reflection in Safe
+          </button>
         </div>
       </div>
     </div>
@@ -2616,8 +2601,8 @@ function renderStudents() {
   return `
     <div class="page-header">
       <div class="page-header-left">
-        <h1>Students & Academic Diagnostics</h1>
-        <p>Manage student profiles, parent details, and interactive question assessments</p>
+        <h1>Students</h1>
+        <p>Manage student profiles, performance records, and academic progress</p>
       </div>
       <div class="page-header-actions">
         <button class="btn btn-primary" onclick="showAddStudentModal()">+ Add New Student</button>
@@ -2658,15 +2643,21 @@ function renderStudentCard(s) {
   return `
     <div class="card card-elevated card-interactive student-card" onclick="AppState.navigate('student-detail', {studentId:'${s.id}'})">
       <div style="position:relative">
-        <img src="${s.photo}" alt="${s.name}" class="student-avatar" style="width:72px;height:72px;object-fit:cover;border-radius:50%;border:3px solid #ffffff;box-shadow:0 4px 10px rgba(0,0,0,0.1)" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'">
+        <img src="${getStudentCartoonAvatar(s.name)}" alt="${s.name}" class="student-avatar" style="width:74px;height:74px;object-fit:cover;border-radius:50%;border:3px solid #ffffff;box-shadow:0 4px 12px rgba(0,0,0,0.1)">
         <span class="badge badge-blue" style="position:absolute;bottom:-4px;right:0;font-size:10px">Roll #${s.rollNo}</span>
       </div>
       <h3 style="margin-top:var(--space-2)">${s.name}</h3>
       <div class="student-card-class">${getClassName(s.classId)} • Roll No. ${s.rollNo}</div>
       
       <div class="text-xs text-muted mb-2 text-center" style="line-height:1.4">
-        <div>👨‍👩‍👧 <strong>Parent:</strong> ${s.parentName}</div>
-        <div>📞 ${s.phone}</div>
+        <div>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:2px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+          <strong>Parent:</strong> ${s.parentName}
+        </div>
+        <div>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:2px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+          ${s.phone}
+        </div>
       </div>
 
       <div class="student-card-stats">
@@ -2709,7 +2700,14 @@ function filterStudents() {
   if (grid) {
     grid.innerHTML = filtered.length
       ? filtered.map(s => renderStudentCard(s)).join('')
-      : `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">👨‍🎓</div><h3>No students found</h3><p>Try adjusting your search or add a new student.</p><button class="btn btn-primary" onclick="showAddStudentModal()">+ Add Student</button></div>`;
+      : `<div class="empty-state" style="grid-column:1/-1">
+          <div class="empty-state-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          </div>
+          <h3>No students found</h3>
+          <p>Try adjusting your search or add a new student.</p>
+          <button class="btn btn-primary" onclick="showAddStudentModal()">+ Add Student</button>
+        </div>`;
   }
 }
 
@@ -2762,7 +2760,8 @@ function renderStudentDetail() {
       <div class="page-header-left">
         <div class="flex items-center gap-3">
           <button class="btn btn-primary btn-sm" onclick="AppState.navigate('students')" style="display:flex;align-items:center;gap:6px">
-            <span>← Back to Students</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            <span>Back to Students</span>
           </button>
           <div>
             <h1>${s.name} — Student Diagnostics & Assessments</h1>
@@ -2779,7 +2778,7 @@ function renderStudentDetail() {
     <div class="student-detail-pane animate-fade-in" style="display:flex;flex-direction:column;gap:var(--space-6)">
       <!-- Student Hero Info Card -->
       <div class="student-info-hero">
-          <img src="${s.photo}" alt="${s.name}" class="student-big-photo" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'">
+          <img src="${getStudentCartoonAvatar(s.name)}" alt="${s.name}" class="student-big-photo">
           <div style="flex:1">
             <div class="flex items-center justify-between flex-wrap gap-2">
               <div>
@@ -2791,26 +2790,41 @@ function renderStudentDetail() {
                   <span class="badge badge-cyan">Blood Group: ${s.bloodGroup || 'O+'}</span>
                 </div>
               </div>
-              <button class="btn btn-secondary btn-sm" onclick="showEditStudentModal('${s.id}')">✏️ Edit Details</button>
+              <button class="btn btn-secondary btn-sm" onclick="showEditStudentModal('${s.id}')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:4px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                Edit Details
+              </button>
             </div>
 
             <!-- Detailed Info Grid: Parent Name, Address, Phone, Emergency -->
             <div class="student-info-grid">
               <div class="info-item">
                 <label>Parent / Guardian</label>
-                <span>👨‍👩‍👧 ${s.parentName}</span>
+                <span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:2px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                  ${s.parentName}
+                </span>
               </div>
               <div class="info-item">
                 <label>Phone Number</label>
-                <span>📞 <a href="tel:${s.phone}" style="color:var(--primary-600)">${s.phone}</a></span>
+                <span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:2px"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                  <a href="tel:${s.phone}" style="color:var(--primary-600)">${s.phone}</a>
+                </span>
               </div>
               <div class="info-item" style="grid-column:1/-1">
                 <label>Residential Address</label>
-                <span>🏠 ${s.address}</span>
+                <span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:2px"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+                  ${s.address}
+                </span>
               </div>
               <div class="info-item">
                 <label>Emergency Contact</label>
-                <span>🚨 ${s.emergencyContact || s.phone}</span>
+                <span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:2px"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                  ${s.emergencyContact || s.phone}
+                </span>
               </div>
               <div class="info-item">
                 <label>Attendance Rate</label>
@@ -2860,8 +2874,14 @@ function renderStudentDetail() {
             </div>
             <div class="flex gap-2">
               <button class="btn btn-primary btn-sm" onclick="showAddQuestionModal('${s.id}')">+ Add Question</button>
-              <button class="btn btn-secondary btn-sm" onclick="showShareQuizModal('${s.id}')">📤 Share with Student</button>
-              <button class="btn btn-ghost btn-sm" onclick="showAnswerQuizModal('${s.id}')" style="border:1px solid var(--accent-400);color:var(--accent-700)">✍️ Student Take Test</button>
+              <button class="btn btn-secondary btn-sm" onclick="showShareQuizModal('${s.id}')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:4px"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+                Share with Student
+              </button>
+              <button class="btn btn-ghost btn-sm" onclick="showAnswerQuizModal('${s.id}')" style="border:1px solid var(--accent-400);color:var(--accent-700)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:4px"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                Student Take Test
+              </button>
             </div>
           </div>
 
@@ -2899,7 +2919,7 @@ function renderStudentDetail() {
                 <div style="display:flex;align-items:center;gap:6px;background:var(--neutral-50);border:1px solid var(--neutral-200);padding:6px 12px;border-radius:var(--radius-md)">
                   <span class="font-semibold text-xs">${st.subject}:</span>
                   <span class="${st.percent >= 80 ? 'strength-tag-good' : 'strength-tag-need-help'}">
-                    ${st.percent >= 80 ? '🌟 High Proficiency' : '⚠️ Needs Practice'} (${st.correct}/${st.total} - ${st.percent}%)
+                    ${st.percent >= 80 ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> High Proficiency' : '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> Needs Practice'} (${st.correct}/${st.total} - ${st.percent}%)
                   </span>
                 </div>
               `).join('')}
@@ -2942,7 +2962,9 @@ function renderStudentDetail() {
                       </div>
                       <div class="font-medium text-sm" style="color:var(--neutral-800)">${q.question}</div>
                     </div>
-                    <button class="btn btn-ghost btn-xs text-muted" onclick="deleteQuestion('${q.id}')" title="Delete Question">🗑️</button>
+                    <button class="btn btn-ghost btn-xs text-muted" onclick="deleteQuestion('${q.id}')" title="Delete Question">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    </button>
                   </div>
 
                   <div class="question-options-grid">
@@ -2989,12 +3011,12 @@ function filterRosterList(query) {
 // Add / Edit Student Modals
 function showAddStudentModal() {
   const avatarPresets = [
-    'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
+    'https://api.dicebear.com/7.x/adventurer/svg?seed=Aarav&backgroundColor=b6e3f4',
+    'https://api.dicebear.com/7.x/adventurer/svg?seed=Diya&backgroundColor=ffd5dc',
+    'https://api.dicebear.com/7.x/adventurer/svg?seed=Vivaan&backgroundColor=c0aede',
+    'https://api.dicebear.com/7.x/adventurer/svg?seed=Ananya&backgroundColor=ffdfbf',
+    'https://api.dicebear.com/7.x/adventurer/svg?seed=Kabir&backgroundColor=d1d4f9',
+    'https://api.dicebear.com/7.x/adventurer/svg?seed=Priya&backgroundColor=ffd5dc'
   ];
 
   showModal(`
