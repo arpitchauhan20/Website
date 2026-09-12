@@ -4109,7 +4109,7 @@ function renderProfile() {
       </div>
     </div>
 
-    <div class="profile-hero-card mb-6" style="background:linear-gradient(135deg, rgba(243,106,54,0.08) 0%, rgba(67,160,71,0.08) 100%);border:1px solid rgba(243,106,54,0.2);border-radius:var(--radius-xl);padding:32px;display:flex;gap:28px;align-items:center">
+    <div class="profile-hero-card mb-6" style="background:linear-gradient(135deg, rgba(220,162,120,0.12) 0%, rgba(205,212,177,0.2) 100%);border:1px solid rgba(220,162,120,0.3);border-radius:var(--radius-xl);padding:32px;display:flex;gap:28px;align-items:center">
       <img src="${u.avatarUrl}" alt="${u.name}" style="width:110px;height:110px;border-radius:50%;object-fit:cover;border:4px solid #ffffff;box-shadow:0 8px 24px rgba(0,0,0,0.12)" onerror="this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80'">
       <div style="flex:1">
         <div class="flex items-center gap-3 mb-1">
@@ -4277,7 +4277,7 @@ function showTeacherProfileModal() {
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body">
-      <div class="profile-hero-card mb-4" style="background:linear-gradient(135deg, rgba(243,106,54,0.08) 0%, rgba(67,160,71,0.08) 100%);border:1px solid rgba(243,106,54,0.2);border-radius:var(--radius-xl);padding:20px;display:flex;gap:20px;align-items:center">
+      <div class="profile-hero-card mb-4" style="background:linear-gradient(135deg, rgba(220,162,120,0.12) 0%, rgba(205,212,177,0.2) 100%);border:1px solid rgba(220,162,120,0.3);border-radius:var(--radius-xl);padding:20px;display:flex;gap:20px;align-items:center">
         <img src="${u.avatarUrl}" alt="${u.name}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid #ffffff;box-shadow:0 4px 12px rgba(0,0,0,0.12)" onerror="this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80'">
         <div style="flex:1">
           <div class="flex items-center gap-2 mb-1">
