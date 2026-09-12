@@ -481,7 +481,10 @@ function initSpeedometerInteractivity(containerId = 'speedometer-widget-main') {
   }
 
   svg.addEventListener('pointerup', endDrag);
-  svg.addEventListener('pointercafunction renderSpeedometer(score, containerId = 'speedometer-widget-main') {
+  svg.addEventListener('pointercancel', endDrag);
+}
+
+function renderSpeedometer(score, containerId = 'speedometer-widget-main') {
   const angle = getAngleForScore(score);
   
   // Clean Major Ticks & Numbers (1 to 10)
@@ -571,9 +574,6 @@ function initSpeedometerInteractivity(containerId = 'speedometer-widget-main') {
         <span class="speedo-hint-icon">✥</span>
         <span>Drag needle or tap dial to calibrate velocity</span>
       </div>
-    </div>
-  `;
-}div>
     </div>
   `;
 }
