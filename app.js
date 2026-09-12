@@ -2064,8 +2064,8 @@ function renderJournal() {
     </div>
 
     <div class="calendar-safe-stacked-layout stagger-children">
-      <!-- Calendar Card (Top) -->
-      <div class="card card-elevated" style="padding:var(--space-6)">
+      <!-- Calendar Card (Top - Compact) -->
+      <div class="card card-elevated calendar-card-compact">
         <div class="calendar-header-controls">
           <button class="btn btn-ghost btn-sm" onclick="changeCalendarMonth(-1)">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px"><polyline points="15 18 9 12 15 6"></polyline></svg> Previous
