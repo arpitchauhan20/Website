@@ -481,35 +481,25 @@ function initSpeedometerInteractivity(containerId = 'speedometer-widget-main') {
   }
 
   svg.addEventListener('pointerup', endDrag);
-  svg.addEventListener('pointercancel', endDrag);
-}
-
-function renderSpeedometer(score, containerId = 'speedometer-widget-main') {
+  svg.addEventListener('pointercafunction renderSpeedometer(score, containerId = 'speedometer-widget-main') {
   const angle = getAngleForScore(score);
   
-  // Major Ticks (1 to 10) & Minor Half-Step Micro-Pips
+  // Clean Major Ticks & Numbers (1 to 10)
   let ticksHtml = '';
-  
-  // Minor half-step pips (1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5)
-  for (let half = 1.5; half <= 9.5; half += 1) {
-    const a = getAngleForScore(half);
-    const rad = (a - 90) * Math.PI / 180;
-    const px = Math.round(170 + 99 * Math.cos(rad));
-    const py = Math.round(152 + 99 * Math.sin(rad));
-    ticksHtml += `<circle cx="${px}" cy="${py}" r="1.5" class="speedo-sub-pip" />\n`;
-  }
-
-  // Major Ticks & Numbers (1 to 10)
   for (let s = 1; s <= 10; s++) {
     const a = getAngleForScore(s);
     const rad = (a - 90) * Math.PI / 180;
-    const x1 = Math.round(170 + 94 * Math.cos(rad));
-    const y1 = Math.round(152 + 94 * Math.sin(rad));
-    const x2 = Math.round(170 + 115 * Math.cos(rad));
-    const y2 = Math.round(152 + 115 * Math.sin(rad));
-    const tx = Math.round(170 + 132 * Math.cos(rad));
-    const ty = Math.round(152 + 132 * Math.sin(rad));
+    // Ticks on inner side of arc (radius 86 to 96)
+    const x1 = Math.round(170 + 86 * Math.cos(rad));
+    const y1 = Math.round(152 + 86 * Math.sin(rad));
+    const x2 = Math.round(170 + 96 * Math.cos(rad));
+    const y2 = Math.round(152 + 96 * Math.sin(rad));
+    
+    // Numbers outside arc (radius 128) - zero overlap!
+    const tx = Math.round(170 + 128 * Math.cos(rad));
+    const ty = Math.round(152 + 128 * Math.sin(rad));
     const isSelected = s === score;
+
     ticksHtml += `
       <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="speedo-tick ${isSelected ? 'active' : ''}" data-tick="${s}" />
       <text x="${tx}" y="${ty + 4}" class="speedo-number ${isSelected ? 'active' : ''}" data-tick="${s}" text-anchor="middle">${s}</text>
@@ -520,99 +510,51 @@ function renderSpeedometer(score, containerId = 'speedometer-widget-main') {
 
   return `
     <div class="speedometer-widget" id="${containerId}">
-      <!-- Ambient Radial Aura Glow behind dial -->
-      <div class="speedo-ambient-aura ${zone}" id="${containerId}-aura"></div>
-
-      <div class="speedometer-dial-container" title="Drag needle or click arc to calibrate teaching energy">
-        <svg viewBox="0 0 340 196" class="speedometer-svg" id="${containerId}-svg" aria-label="Teacher Velocity Mood Gauge">
+      <div class="speedometer-dial-container" title="Drag needle or click dial to calibrate teaching velocity">
+        <svg viewBox="0 0 340 185" class="speedometer-svg" id="${containerId}-svg" aria-label="Teacher Mood Meter Gauge">
           <defs>
-            <!-- Rich Gradient across the 4 zones -->
+            <!-- Smooth Continuous Multi-Stop Gradient -->
             <linearGradient id="speedoTrackGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#E78860" />
-              <stop offset="28%" stop-color="#EFA872" />
-              <stop offset="55%" stop-color="#E8B568" />
-              <stop offset="78%" stop-color="#99B570" />
-              <stop offset="100%" stop-color="#469658" />
+              <stop offset="0%" stop-color="#E28B65" />
+              <stop offset="30%" stop-color="#E5AF64" />
+              <stop offset="65%" stop-color="#8DB268" />
+              <stop offset="100%" stop-color="#409455" />
             </linearGradient>
 
-            <linearGradient id="speedoBezelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="rgba(255,255,255,0.9)" />
-              <stop offset="50%" stop-color="rgba(220,162,120,0.4)" />
-              <stop offset="100%" stop-color="rgba(205,212,177,0.7)" />
-            </linearGradient>
-
-            <radialGradient id="dialFacePlateGrad" cx="50%" cy="80%" r="70%">
-              <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
-              <stop offset="65%" stop-color="#FFF5EC" stop-opacity="0.8" />
-              <stop offset="100%" stop-color="#FDE8D4" stop-opacity="0.6" />
-            </radialGradient>
-
-            <linearGradient id="needleBodyGradLight" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#3D2E26" />
-              <stop offset="100%" stop-color="#241B16" />
-            </linearGradient>
-
-            <linearGradient id="hubRimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#FCE5CE" />
-              <stop offset="40%" stop-color="#DCA278" />
-              <stop offset="100%" stop-color="#8D532B" />
-            </linearGradient>
-
-            <!-- Glow and Shadows -->
-            <filter id="speedoNeedleShadow" x="-30%" y="-30%" width="160%" height="160%">
-              <feDropShadow dx="0" dy="4" stdDeviation="3.5" flood-color="rgba(46,36,32,0.3)" />
-            </filter>
-
-            <filter id="speedoTrackGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="3.5" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            <filter id="speedoNeedleShadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="3" stdDeviation="2.5" flood-color="rgba(43,30,23,0.25)" />
             </filter>
           </defs>
 
-          <!-- Dial Housing Face Plate -->
-          <path d="M 32,175 A 142,142 0 0,1 308,175 Z" fill="url(#dialFacePlateGrad)" opacity="0.75" />
-          <path d="M 32,175 A 142,142 0 0,1 308,175" fill="none" stroke="url(#speedoBezelGrad)" stroke-width="2" stroke-linecap="round" />
+          <!-- Track Background Trench -->
+          <path d="M 67.6,124.6 A 106,106 0 0,1 272.4,124.6" class="speedo-track-bg" fill="none" stroke="rgba(220,162,120,0.18)" stroke-width="12" stroke-linecap="round" />
 
-          <!-- Outer Track Shadow Trench -->
-          <path d="M 58.8,181 A 115,115 0 0,1 281.2,181" class="speedo-track-trench" fill="none" stroke="rgba(141,83,43,0.08)" stroke-width="26" stroke-linecap="round" />
-          
-          <!-- Outer Soft Track Glow Layer -->
-          <path d="M 58.8,181 A 115,115 0 0,1 281.2,181" class="speedo-track-glow-layer" fill="none" stroke="url(#speedoTrackGrad)" stroke-width="17" stroke-linecap="round" opacity="0.3" filter="url(#speedoTrackGlow)" />
+          <!-- Colored Active Gradient Arc -->
+          <path d="M 67.6,124.6 A 106,106 0 0,1 272.4,124.6" class="speedo-track-active" fill="none" stroke="url(#speedoTrackGrad)" stroke-width="12" stroke-linecap="round" />
 
-          <!-- Main High-Definition Gradient Arc -->
-          <path d="M 58.8,181 A 115,115 0 0,1 281.2,181" class="speedo-track-active" fill="none" stroke="url(#speedoTrackGrad)" stroke-width="15" stroke-linecap="round" />
-
-          <!-- Inner Precision Guide Rail (Dotted) -->
-          <path d="M 77,178 A 96,96 0 0,1 263,178" fill="none" stroke="rgba(141,83,43,0.22)" stroke-width="1.5" stroke-dasharray="2 4" stroke-linecap="round" />
-
-          <!-- Ticks, Sub-pips and Numbers -->
+          <!-- Ticks and Numbers -->
           <g class="speedo-ticks-group">
             ${ticksHtml}
           </g>
 
-          <!-- High-End Chronograph Needle (Draggable & Clickable) -->
+          <!-- Sleek Aerodynamic Needle (Draggable & Clickable) -->
           <g class="speedometer-needle-group" id="${containerId}-needle" style="transform: rotate(${angle}deg); transform-origin: 170px 152px;" filter="url(#speedoNeedleShadow)">
-            <!-- Beveled 3D Needle Blade -->
-            <polygon points="166,152 170,152 170,36 168.5,36" fill="url(#needleBodyGradLight)" />
-            <polygon points="170,152 174,152 171.5,36 170,36" fill="#1C1410" />
+            <!-- Needle Blade -->
+            <polygon points="167,152 173,152 171,48 169,48" fill="#2B1E17" />
+            <!-- Velocity Center Line -->
+            <line x1="170" y1="135" x2="170" y2="52" stroke="#E28B65" stroke-width="2" stroke-linecap="round" />
+            <!-- Tip Indicator Bead -->
+            <circle cx="170" cy="48" r="3.5" fill="#E28B65" stroke="#FFFFFF" stroke-width="1.2" class="speedo-needle-tip-glow" />
 
-            <!-- Luminous Center Velocity Groove -->
-            <line x1="170" y1="130" x2="170" y2="44" stroke="#E89A6C" stroke-width="2" stroke-linecap="round" />
-
-            <!-- Radiant Glowing Tip Bead -->
-            <circle cx="170" cy="36" r="6.5" fill="#DCA278" stroke="#FFFFFF" stroke-width="1.8" class="speedo-needle-tip-glow" />
-            <circle cx="170" cy="36" r="2.5" fill="#FFF9E2" />
-
-            <!-- Multi-Tier Luxury Center Pivot Cap -->
-            <circle cx="170" cy="152" r="16.5" fill="rgba(30,20,15,0.2)" />
-            <circle cx="170" cy="152" r="14.5" fill="url(#hubRimGrad)" stroke="#693C1D" stroke-width="0.8" />
-            <circle cx="170" cy="152" r="8.5" fill="#241B16" />
-            <circle cx="170" cy="152" r="4.5" fill="#F8C68E" stroke="#FFFFFF" stroke-width="1" />
+            <!-- Clean Metallic Center Hub -->
+            <circle cx="170" cy="152" r="14" fill="#DCA278" stroke="#8D532B" stroke-width="1.2" />
+            <circle cx="170" cy="152" r="9" fill="#2B1E17" />
+            <circle cx="170" cy="152" r="3.5" fill="#FFF4EA" />
           </g>
         </svg>
       </div>
 
-      <!-- Center Digital Gauge Readout with Zone Styling -->
+      <!-- Center Digital Gauge Readout -->
       <div class="speedometer-digital-readout">
         <div class="speedo-score-row">
           <span class="speedo-score-number" id="${containerId}-val">${score}</span>
@@ -627,8 +569,11 @@ function renderSpeedometer(score, containerId = 'speedometer-widget-main') {
       <!-- Tactile Guidance Indicator -->
       <div class="speedo-interactive-hint">
         <span class="speedo-hint-icon">✥</span>
-        <span>Drag needle or tap anywhere on the dial to calibrate velocity</span>
+        <span>Drag needle or tap dial to calibrate velocity</span>
       </div>
+    </div>
+  `;
+}div>
     </div>
   `;
 }
