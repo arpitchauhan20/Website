@@ -18,7 +18,7 @@ const MOCK_DATA = {
     department: 'Department of English & Humanities',
     joinDate: '2018-07-15',
     totalExperience: '8+ Years',
-    avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&auto=format&fit=crop&q=80',
+    avatarUrl: 'ishita-avatar.jpg',
     subjects: ['English Literature', 'Creative Writing', 'Grammar & Composition'],
     assignedClasses: ['c1', 'c2', 'c3'],
     bio: 'Passionate English educator inspiring student voices through literature, creative writing workshops, critical text analysis, and joyful classroom discourse.',

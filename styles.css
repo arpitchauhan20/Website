@@ -90,9 +90,9 @@
   --neutral-900: #14100A;
 
   /* Backgrounds */
-  --bg-primary: #FDF4EB;
-  --bg-surface: #FFF9F3;
-  --bg-surface-elevated: #ffffff;
+  --bg-primary: #F8FAFC;
+  --bg-surface: #FFF5EC;
+  --bg-surface-elevated: #FEEDE0;
   --bg-surface-warm: #FEEDE0;
   --bg-surface-pistachio: #EBECCC;
   --bg-surface-peach: #FDE8D4;
@@ -1065,7 +1065,7 @@ body.sidebar-resizing .sidebar-resize-handle {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(145deg, #FDF4EB 0%, #FFF8F1 45%, #FEEDE0 100%);
+  background: #F8FAFC;
 }
 
 body.sidebar-resizing .main-content {
@@ -1082,10 +1082,10 @@ body.sidebar-resizing .main-content {
    ===================================================== */
 .topbar {
   height: var(--topbar-height);
-  background: rgba(254, 244, 235, 0.88);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(220, 162, 120, 0.25);
+  border-bottom: 1px solid rgba(220, 162, 120, 0.22);
   display: flex;
   align-items: center;
   padding: 0 var(--space-6);
@@ -1093,7 +1093,7 @@ body.sidebar-resizing .main-content {
   position: sticky;
   top: 0;
   z-index: var(--z-topbar);
-  box-shadow: 0 2px 12px rgba(141, 83, 43, 0.03);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
 }
 
 .topbar-left-group {
@@ -1340,27 +1340,27 @@ body.sidebar-resizing .main-content {
    Cards
    ===================================================== */
 .card {
-  background: var(--bg-surface);
+  background: linear-gradient(135deg, #FFF7F0 0%, #FEEDE0 100%);
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(220, 162, 120, 0.28);
-  box-shadow: 0 4px 16px rgba(141, 83, 43, 0.04);
+  border: 1px solid rgba(220, 162, 120, 0.35);
+  box-shadow: 0 4px 18px rgba(220, 140, 90, 0.08);
   transition: all var(--transition-base);
 }
 
 .card:hover {
-  box-shadow: 0 8px 24px rgba(141, 83, 43, 0.08);
-  border-color: rgba(220, 162, 120, 0.4);
+  box-shadow: 0 8px 24px rgba(180, 100, 50, 0.14);
+  border-color: rgba(220, 162, 120, 0.55);
 }
 
 .card-glass {
-  background: rgba(255, 249, 243, 0.88);
+  background: rgba(255, 245, 236, 0.92);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(220, 162, 120, 0.3);
+  border: 1px solid rgba(220, 162, 120, 0.35);
 }
 
 .card-elevated {
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 6px 20px rgba(220, 140, 90, 0.10);
 }
 
 .card-interactive {
@@ -1369,7 +1369,7 @@ body.sidebar-resizing .main-content {
 
 .card-interactive:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 10px 28px rgba(220, 140, 90, 0.16);
 }
 
 .card-gradient {
@@ -1402,49 +1402,79 @@ body.sidebar-resizing .main-content {
 }
 
 /* =====================================================
-   Stat Cards
+   Stat Cards (Highlighted Section)
    ===================================================== */
 .stat-card {
+  background: linear-gradient(135deg, #FFF5EC 0%, #FEE8D6 100%);
+  border: 1.5px solid rgba(220, 162, 120, 0.45);
+  border-radius: var(--radius-xl);
   padding: var(--space-5);
   display: flex;
   align-items: flex-start;
   gap: var(--space-4);
+  box-shadow: 0 6px 20px rgba(220, 140, 90, 0.12);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3.5px;
+  background: linear-gradient(90deg, #DCA278 0%, #EA975E 50%, #C98655 100%);
+  opacity: 0.95;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(220, 130, 75, 0.22);
+  border-color: rgba(200, 120, 60, 0.75);
 }
 
 .stat-card-icon {
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
+  width: 50px;
+  height: 50px;
+  min-width: 50px;
   border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.3rem;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
 }
 
 .stat-card-icon.blue {
-  background: var(--primary-50);
-  color: var(--primary-600);
+  background: #FFEFE0;
+  color: #C96A27;
+  border: 1px solid #FDCFA8;
 }
 
 .stat-card-icon.cyan {
-  background: var(--accent-100);
-  color: var(--accent-500);
+  background: #EFF6E0;
+  color: #4D7C0F;
+  border: 1px solid #D7EAB0;
 }
 
 .stat-card-icon.green {
-  background: var(--success-50);
-  color: var(--success-600);
+  background: #EAF5EA;
+  color: #2D7A32;
+  border: 1px solid #C8E6C9;
 }
 
 .stat-card-icon.amber {
-  background: var(--warning-50);
-  color: var(--warning-600);
+  background: #FFF4E0;
+  color: #D97706;
+  border: 1px solid #FDE68A;
 }
 
 .stat-card-icon.red {
-  background: var(--danger-50);
-  color: var(--danger-600);
+  background: #FEECEB;
+  color: #DC2626;
+  border: 1px solid #FECACA;
 }
 
 .stat-card-info {
@@ -1453,16 +1483,18 @@ body.sidebar-resizing .main-content {
 
 .stat-card-label {
   font-size: var(--font-size-sm);
-  color: var(--neutral-500);
-  font-weight: var(--font-weight-medium);
+  color: #6E533F;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .stat-card-value {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--neutral-900);
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: #1E293B;
   line-height: var(--line-height-tight);
   margin-top: var(--space-1);
+  letter-spacing: -0.02em;
 }
 
 .stat-card-trend {
@@ -1470,20 +1502,22 @@ body.sidebar-resizing .main-content {
   align-items: center;
   gap: var(--space-1);
   font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-medium);
-  margin-top: var(--space-1);
-  padding: 2px 8px;
+  font-weight: 600;
+  margin-top: var(--space-2);
+  padding: 3px 10px;
   border-radius: var(--radius-full);
 }
 
 .stat-card-trend.up {
-  color: var(--success-700);
-  background: var(--success-50);
+  color: #1E6E24;
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.25);
 }
 
 .stat-card-trend.down {
-  color: var(--danger-600);
-  background: var(--danger-50);
+  color: #B91C1C;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.25);
 }
 
 /* =====================================================
