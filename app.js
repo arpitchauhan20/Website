@@ -42,6 +42,7 @@ const AppState = {
       this.isAuthenticated = false;
       this.currentPage = 'login';
     }
+    this.speedometerSwept = false;
     const sidebar = localStorage.getItem('teachtrack_sidebar');
     if (sidebar === 'collapsed') this.sidebarCollapsed = true;
 
@@ -61,6 +62,7 @@ const AppState = {
     this.currentPage = 'dashboard';
     this.showDashboardGreeting = true;
     this.greetingAnimationDone = false;
+    this.speedometerSwept = false;
     closeModal();
     renderApp();
     // Trigger greeting animation after DOM render
@@ -267,52 +269,195 @@ function selectMood(score) {
   AppState.currentMood = score;
   AppState.selectedMoodQuote = getQuoteForMood(score);
   
-  if (AppState.currentPage === 'dashboard') {
-    const prevGreeting = AppState.showDashboardGreeting;
-    AppState.showDashboardGreeting = false;
-    AppState.greetingAnimationDone = true;
-    renderApp();
-  } else {
-    showToast('Mood Logged', `Energy Velocity: ${score}/10 — ${getMoodLabel(score)}`, 'info');
-    renderApp();
+function updateSpeedoZoneDOM(zoneEl, txtEl, score) {
+  if (zoneEl) {
+    zoneEl.className = `speedo-zone-pill ${getMoodZone(score)}`;
+  }
+  if (txtEl) {
+    txtEl.textContent = getMoodLabel(score);
   }
 }
 
-function shuffleMoodQuote() {
-  AppState.selectedMoodQuote = getQuoteForMood(AppState.currentMood);
-  AppState.showDashboardGreeting = false;
-  AppState.greetingAnimationDone = true;
-  renderApp();
+function updateDashboardReflectionQuote(score) {
+  const quote = getQuoteForMood(score);
+  const quoteCard = document.querySelector('.speedo-quote-card');
+  if (quoteCard) {
+    quoteCard.className = `speedo-quote-card ${getMoodZone(score)}`;
+    const badge = quoteCard.querySelector('.speedo-quote-badge');
+    if (badge) badge.textContent = quote.zoneLabel || getMoodLabel(score);
+    const body = quoteCard.querySelector('.speedo-quote-body');
+    if (body) body.textContent = `"${quote.quote}"`;
+    const author = quoteCard.querySelector('.speedo-quote-author');
+    if (author) author.textContent = `— ${quote.author}`;
+  }
 }
 
-function saveSpeedoReflection() {
-  const input = document.getElementById('speedo-reflection-text');
-  const text = input ? input.value.trim() : '';
-  if (!text) {
-    showToast('Reflection Note Empty', 'Please write a brief intention before logging.', 'error');
-    return;
+function getScoreFromEvent(e, svgEl) {
+  const rect = svgEl.getBoundingClientRect();
+  const svgX = ((e.clientX - rect.left) / rect.width) * 340;
+  const svgY = ((e.clientY - rect.top) / rect.height) * 190;
+  const dx = svgX - 170;
+  const dy = svgY - 152;
+  
+  let deg = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+  if (deg > 180) deg -= 360;
+  if (deg < -180) deg += 360;
+
+  // Clamp angle to -75deg (score 1) .. +75deg (score 10)
+  const clampedDeg = Math.max(-75, Math.min(75, deg));
+  const rawScore = 1 + (clampedDeg - (-75)) * (9 / 150);
+  const score = Math.max(1, Math.min(10, Math.round(rawScore)));
+  return { score, deg: clampedDeg };
+}
+
+function runSpeedometerSweepAnimation(containerId = 'speedometer-widget-main') {
+  const widget = document.getElementById(containerId);
+  if (!widget) return;
+  const needle = document.getElementById(`${containerId}-needle`);
+  const valDisplay = document.getElementById(`${containerId}-val`);
+  const zoneDisplay = document.getElementById(`${containerId}-zone`);
+  const zoneTxt = document.getElementById(`${containerId}-zonetxt`);
+  if (!needle) return;
+
+  AppState.speedometerSwept = true;
+
+  // Phase 0: Start needle at 1 (-75deg)
+  needle.style.transition = 'none';
+  needle.style.transform = 'rotate(-75deg)';
+  if (valDisplay) valDisplay.textContent = '1';
+  updateSpeedoZoneDOM(zoneDisplay, zoneTxt, 1);
+
+  // Phase 1: Smooth, rapid power sweep to 10 (+75deg) over 850ms
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      needle.style.transition = 'transform 0.85s cubic-bezier(0.16, 1, 0.3, 1.1)';
+      needle.style.transform = 'rotate(75deg)';
+      
+      let startTime = performance.now();
+      function countUp(now) {
+        let progress = Math.min(1, (now - startTime) / 850);
+        let s = Math.min(10, Math.max(1, Math.round(1 + progress * 9)));
+        if (valDisplay) valDisplay.textContent = s;
+        updateSpeedoZoneDOM(zoneDisplay, zoneTxt, s);
+        if (progress < 1) requestAnimationFrame(countUp);
+      }
+      requestAnimationFrame(countUp);
+
+      // Phase 2: Pause at 10, then smoothly sweep back to 5 (0deg) over 750ms
+      setTimeout(() => {
+        needle.style.transition = 'transform 0.75s cubic-bezier(0.34, 1.3, 0.64, 1)';
+        needle.style.transform = 'rotate(0deg)'; // 0deg corresponds to score 5
+
+        let startBackTime = performance.now();
+        function countDown(now) {
+          let progress = Math.min(1, (now - startBackTime) / 750);
+          let s = Math.round(10 - progress * 5); // 10 -> 5
+          if (valDisplay) valDisplay.textContent = s;
+          updateSpeedoZoneDOM(zoneDisplay, zoneTxt, s);
+          if (progress < 1) {
+            requestAnimationFrame(countDown);
+          } else {
+            AppState.currentMood = 5;
+            AppState.selectedMoodQuote = getQuoteForMood(5);
+            updateDashboardReflectionQuote(5);
+
+            // Highlight 5 as active tick
+            widget.querySelectorAll('.speedo-tick, .speedo-number').forEach(el => {
+              const num = parseInt(el.getAttribute('data-tick'));
+              if (num === 5) el.classList.add('active');
+              else el.classList.remove('active');
+            });
+          }
+        }
+        requestAnimationFrame(countDown);
+      }, 1050);
+    }, 150);
+  });
+}
+
+function initSpeedometerInteractivity(containerId = 'speedometer-widget-main') {
+  const widget = document.getElementById(containerId);
+  if (!widget) return;
+  const svg = document.getElementById(`${containerId}-svg`);
+  const needle = document.getElementById(`${containerId}-needle`);
+  const valDisplay = document.getElementById(`${containerId}-val`);
+  const zoneDisplay = document.getElementById(`${containerId}-zone`);
+  const zoneTxt = document.getElementById(`${containerId}-zonetxt`);
+  if (!svg || !needle) return;
+
+  // Run startup sweep if first time on dashboard after login
+  if (!AppState.speedometerSwept && containerId === 'speedometer-widget-main') {
+    runSpeedometerSweepAnimation(containerId);
   }
-  const todayStr = getToday();
-  let entry = MOCK_DATA.teacherSafeJournal.find(e => e.date === todayStr);
-  if (entry) {
-    entry.experience = (entry.experience ? entry.experience + '\n\n' : '') + `[Velocity ${AppState.currentMood}/10] ${text}`;
-    entry.moodScore = AppState.currentMood;
-  } else {
-    MOCK_DATA.teacherSafeJournal.push({
-      id: generateId(),
-      date: todayStr,
-      title: 'Daily Teaching Intention',
-      experience: `[Velocity ${AppState.currentMood}/10] ${text}`,
-      emojiStickers: ['🌿'],
-      moodScore: AppState.currentMood
+
+  let isDragging = false;
+
+  function updateGaugeVisuals(e, isLiveDrag) {
+    const { score, deg } = getScoreFromEvent(e, svg);
+    needle.style.transition = isLiveDrag ? 'none' : 'transform 0.3s cubic-bezier(0.34, 1.3, 0.64, 1)';
+    needle.style.transform = `rotate(${deg}deg)`;
+    if (valDisplay) valDisplay.textContent = score;
+    updateSpeedoZoneDOM(zoneDisplay, zoneTxt, score);
+
+    widget.querySelectorAll('.speedo-tick, .speedo-number').forEach(el => {
+      const s = parseInt(el.getAttribute('data-tick'));
+      if (s === score) el.classList.add('active');
+      else el.classList.remove('active');
     });
+
+    return score;
   }
-  if (input) input.value = '';
-  showToast('Intention Recorded', `Your thought has been saved to your Teacher Safe.`, 'success');
-  renderApp();
+
+  svg.style.cursor = 'grab';
+  svg.style.touchAction = 'none';
+
+  svg.addEventListener('pointerdown', (e) => {
+    isDragging = true;
+    svg.style.cursor = 'grabbing';
+    svg.setPointerCapture(e.pointerId);
+    updateGaugeVisuals(e, true);
+    e.preventDefault();
+  });
+
+  svg.addEventListener('pointermove', (e) => {
+    if (!isDragging) return;
+    updateGaugeVisuals(e, true);
+    e.preventDefault();
+  });
+
+  function endDrag(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    svg.style.cursor = 'grab';
+    const score = updateGaugeVisuals(e, false);
+    
+    // Snap needle to discrete integer score angle
+    const snapAngle = -75 + (score - 1) * (150 / 9);
+    needle.style.transition = 'transform 0.35s cubic-bezier(0.34, 1.35, 0.64, 1)';
+    needle.style.transform = `rotate(${snapAngle}deg)`;
+
+    AppState.currentMood = score;
+    AppState.selectedMoodQuote = getQuoteForMood(score);
+    updateDashboardReflectionQuote(score);
+
+    // Update weekly arc bar highlight for today
+    const todayBar = document.querySelector('.weekly-arc-col.active-today');
+    if (todayBar) {
+      const bar = todayBar.querySelector('.weekly-arc-bar');
+      const scoreEl = todayBar.querySelector('.weekly-arc-score');
+      if (bar) {
+        bar.className = `weekly-arc-bar ${getMoodZone(score)}`;
+        bar.style.height = `${Math.round((score / 10) * 100)}%`;
+      }
+      if (scoreEl) scoreEl.textContent = score;
+    }
+  }
+
+  svg.addEventListener('pointerup', endDrag);
+  svg.addEventListener('pointercancel', endDrag);
 }
 
-function renderSpeedometer(score) {
+function renderSpeedometer(score, containerId = 'speedometer-widget-main') {
   const angle = -75 + (score - 1) * (150 / 9);
   
   // Ticks calculation around 150-degree semi-arc
@@ -327,55 +472,67 @@ function renderSpeedometer(score) {
     const ty = Math.round(152 + 130 * Math.sin(rad));
     const isSelected = s === score;
     return `
-      <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="speedo-tick ${isSelected ? 'active' : ''}" />
-      <text x="${tx}" y="${ty + 4}" class="speedo-number ${isSelected ? 'active' : ''}" text-anchor="middle" onclick="selectMood(${s})">${s}</text>
+      <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="speedo-tick ${isSelected ? 'active' : ''}" data-tick="${s}" />
+      <text x="${tx}" y="${ty + 4}" class="speedo-number ${isSelected ? 'active' : ''}" data-tick="${s}" text-anchor="middle">${s}</text>
     `;
   }).join('');
 
   return `
-    <div class="speedometer-widget">
-      <svg viewBox="0 0 340 190" class="speedometer-svg" aria-label="Teacher Speedometer Mood Gauge">
-        <defs>
-          <linearGradient id="speedoTrackGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#DCA278" />
-            <stop offset="35%" stop-color="#E8BA85" />
-            <stop offset="70%" stop-color="#9EB07A" />
-            <stop offset="100%" stop-color="#5B8C5A" />
-          </linearGradient>
-          <filter id="speedoNeedleShadow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="rgba(0,0,0,0.25)" />
-          </filter>
-        </defs>
+    <div class="speedometer-widget" id="${containerId}">
+      <div class="speedometer-dial-container" title="Drag needle or click arc to calibrate energy">
+        <svg viewBox="0 0 340 190" class="speedometer-svg" id="${containerId}-svg" aria-label="Teacher Speedometer Mood Gauge">
+          <defs>
+            <linearGradient id="speedoTrackGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#DCA278" />
+              <stop offset="35%" stop-color="#E8BA85" />
+              <stop offset="70%" stop-color="#9EB07A" />
+              <stop offset="100%" stop-color="#5B8C5A" />
+            </linearGradient>
+            <filter id="speedoNeedleShadow" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="rgba(0,0,0,0.25)" />
+            </filter>
+          </defs>
 
-        <!-- Outer Track Background -->
-        <path d="M 58.8,181 A 115,115 0 0,1 281.2,181" fill="none" stroke="rgba(220,162,120,0.18)" stroke-width="22" stroke-linecap="round" />
-        
-        <!-- Colored Gradient Active Arc -->
-        <path d="M 58.8,181 A 115,115 0 0,1 281.2,181" fill="none" stroke="url(#speedoTrackGrad)" stroke-width="14" stroke-linecap="round" />
+          <!-- Outer Track Background -->
+          <path d="M 58.8,181 A 115,115 0 0,1 281.2,181" class="speedo-track-bg" fill="none" stroke="rgba(220,162,120,0.18)" stroke-width="24" stroke-linecap="round" />
+          
+          <!-- Colored Gradient Active Arc -->
+          <path d="M 58.8,181 A 115,115 0 0,1 281.2,181" class="speedo-track-active" fill="none" stroke="url(#speedoTrackGrad)" stroke-width="15" stroke-linecap="round" />
 
-        <!-- Ticks and Numbers -->
-        ${ticks}
+          <!-- Ticks and Numbers -->
+          <g class="speedo-ticks-group">
+            ${ticks}
+          </g>
 
-        <!-- Rotating Speedometer Needle -->
-        <g class="speedometer-needle-group" style="transform: rotate(${angle}deg); transform-origin: 170px 152px;" filter="url(#speedoNeedleShadow)">
-          <polygon points="166,152 174,152 171.5,44 168.5,44" fill="#2E2420" />
-          <polygon points="168,62 172,62 171,38 169,38" fill="#DCA278" />
-          <circle cx="170" cy="152" r="14" fill="#2E2420" />
-          <circle cx="170" cy="152" r="8" fill="#FFF9E2" />
-          <circle cx="170" cy="152" r="4" fill="#8D532B" />
-        </g>
-      </svg>
+          <!-- Rotating Speedometer Needle (Draggable & Interactive) -->
+          <g class="speedometer-needle-group" id="${containerId}-needle" style="transform: rotate(${angle}deg); transform-origin: 170px 152px;" filter="url(#speedoNeedleShadow)">
+            <polygon points="166,152 174,152 171.5,42 168.5,42" fill="#2E2420" />
+            <polygon points="168,62 172,62 171,36 169,36" fill="#DCA278" />
+            <circle cx="170" cy="152" r="15" fill="#2E2420" />
+            <circle cx="170" cy="152" r="8" fill="#FFF9E2" />
+            <circle cx="170" cy="152" r="4" fill="#8D532B" />
+            <!-- Drag Knob / Tip Highlight -->
+            <circle cx="170" cy="38" r="5" fill="#DCA278" stroke="#FFFFFF" stroke-width="1.5" class="speedo-needle-tip-glow" />
+          </g>
+        </svg>
+      </div>
 
       <!-- Center Digital Gauge Readout -->
       <div class="speedometer-digital-readout">
         <div class="speedo-score-row">
-          <span class="speedo-score-number">${score}</span>
+          <span class="speedo-score-number" id="${containerId}-val">${score}</span>
           <span class="speedo-score-denom">/ 10</span>
         </div>
-        <div class="speedo-zone-pill ${getMoodZone(score)}">
+        <div class="speedo-zone-pill ${getMoodZone(score)}" id="${containerId}-zone">
           <span class="speedo-zone-dot"></span>
-          <span>${getMoodLabel(score)}</span>
+          <span id="${containerId}-zonetxt">${getMoodLabel(score)}</span>
         </div>
+      </div>
+
+      <!-- Drag & Touch Guidance Indicator (No Buttons) -->
+      <div class="speedo-interactive-hint">
+        <span class="speedo-hint-icon">✥</span>
+        <span>Drag needle or tap arc to calibrate velocity</span>
       </div>
     </div>
   `;
@@ -394,23 +551,13 @@ function showMoodCheckInModal() {
         <div class="brand-badge-dot"></div>
         <div>
           <h2>Teacher Mindset & Energy Velocity</h2>
-          <p class="text-xs text-muted">Calibrate your teaching focus and emotional vitality</p>
+          <p class="text-xs text-muted">Drag the needle or click the dial to adjust energy velocity</p>
         </div>
       </div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body" style="padding:var(--space-6)">
-      ${renderSpeedometer(AppState.currentMood)}
-
-      <div class="speedo-selector-strip modal-mode" style="margin-top:20px">
-        <div class="speedo-pills-row">
-          ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(s => `
-            <button class="speedo-num-btn ${getMoodZone(s)} ${s === AppState.currentMood ? 'active' : ''}" onclick="selectModalMood(${s})">
-              ${s}
-            </button>
-          `).join('')}
-        </div>
-      </div>
+      ${renderSpeedometer(AppState.currentMood, 'speedometer-widget-modal')}
 
       <!-- Pedagogical Insight Card -->
       <div class="speedo-quote-card ${zoneClass}" style="margin-top:18px">
@@ -424,6 +571,9 @@ function showMoodCheckInModal() {
       <button class="btn btn-primary btn-sm" onclick="closeModal(); showToast('Velocity Saved', 'Your teaching energy has been logged!', 'success'); renderApp();">Save & Done</button>
     </div>
   `, 'md');
+
+  // Initialize interactive drag on modal gauge
+  setTimeout(() => initSpeedometerInteractivity('speedometer-widget-modal'), 50);
 }
 
 function selectModalMood(score) {
@@ -628,6 +778,9 @@ function renderApp() {
   } else {
     app.innerHTML = renderAppShell();
     attachAppEvents();
+    if (AppState.currentPage === 'dashboard') {
+      setTimeout(() => initSpeedometerInteractivity('speedometer-widget-main'), 60);
+    }
   }
 }
 
@@ -1519,25 +1672,9 @@ function renderDashboard() {
         </div>
 
         <div class="speedometer-grid-main">
-          <!-- Left Column: The Interactive Speedometer Dial -->
+          <!-- Left Column: The Interactive Speedometer Dial (Draggable / Clickable) -->
           <div class="speedometer-dial-panel">
             ${renderSpeedometer(AppState.currentMood)}
-
-            <!-- Sleek 1-10 Numeric Velocity Selector (No Emojis) -->
-            <div class="speedo-selector-strip">
-              <span class="speedo-strip-label">Select Energy Velocity:</span>
-              <div class="speedo-pills-row">
-                ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(s => {
-                  const isSel = s === AppState.currentMood;
-                  const zone = getMoodZone(s);
-                  return `
-                    <button class="speedo-num-btn ${zone} ${isSel ? 'active' : ''}" onclick="selectMood(${s})" title="Set mood velocity to ${s}">
-                      ${s}
-                    </button>
-                  `;
-                }).join('')}
-              </div>
-            </div>
           </div>
 
           <!-- Right Column: Daily Pedagogical Fuel & Pre-Class Reflection -->
