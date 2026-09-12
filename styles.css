@@ -2603,8 +2603,17 @@ body.sidebar-resizing .main-content {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.3rem;
   margin-bottom: var(--space-4);
+  transition: transform var(--transition-fast);
+}
+
+.material-card:hover .material-card-icon {
+  transform: scale(1.06);
+}
+
+.material-card-icon svg {
+  display: block;
+  stroke-width: 2px;
 }
 
 .material-card-icon.pdf {

@@ -665,7 +665,7 @@ function startDashboardGreetingAnimation() {
 
     <!-- Centered Greeting Card -->
     <div class="greeting-content">
-      <div class="greeting-badge">✨ Welcome to TeachTrack</div>
+      <div class="greeting-badge">Welcome to TeachTrack</div>
       <h1 class="greeting-title">Good ${getGreeting()}, ${MOCK_DATA.user.name.split(' ')[0]}!</h1>
       <p class="greeting-subtitle">Your workspace is ready. Let's make today inspiring.</p>
     </div>
@@ -1244,7 +1244,7 @@ function renderTopbar() {
       </div>
       <div class="topbar-actions">
         <button class="topbar-action-btn" title="Notifications" onclick="showToast('Notifications', 'All teaching activities are synced', 'info')">
-          🔔
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
           <span class="notification-dot"></span>
         </button>
         <div class="topbar-user-btn" title="Teacher Profile" onclick="showTeacherProfileModal()">
@@ -1435,21 +1435,21 @@ function openSearchPanel() {
         <div class="search-result-group">
           <div class="search-result-group-title">Quick Actions</div>
           <div class="search-result-item" onclick="closeSearchPanel(); showJournalModal();">
-            <div class="search-result-icon journal">📝</div>
+            <div class="search-result-icon journal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg></div>
             <div class="search-result-info">
               <div class="search-result-title">New Journal Entry</div>
               <div class="search-result-meta">Record a teaching activity</div>
             </div>
           </div>
           <div class="search-result-item" onclick="closeSearchPanel(); showMaterialModal();">
-            <div class="search-result-icon material">📚</div>
+            <div class="search-result-icon material"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div>
             <div class="search-result-info">
               <div class="search-result-title">Upload Material</div>
               <div class="search-result-meta">Add a teaching resource</div>
             </div>
           </div>
           <div class="search-result-item" onclick="closeSearchPanel(); AppState.navigate('reports');">
-            <div class="search-result-icon class">📈</div>
+            <div class="search-result-icon class"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></div>
             <div class="search-result-info">
               <div class="search-result-title">Generate Report</div>
               <div class="search-result-meta">Create an academic report</div>
@@ -1496,7 +1496,7 @@ function handleSearchInput(query) {
     journalResults.forEach(j => {
       results += `
         <div class="search-result-item" onclick="closeSearchPanel(); viewJournalEntry('${j.id}');">
-          <div class="search-result-icon journal">📝</div>
+          <div class="search-result-icon journal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg></div>
           <div class="search-result-info">
             <div class="search-result-title">${j.topic}</div>
             <div class="search-result-meta">${getClassName(j.classId)} • ${j.subject} • ${formatDateShort(j.date)}</div>
@@ -1535,7 +1535,7 @@ function handleSearchInput(query) {
     stuResults.forEach(s => {
       results += `
         <div class="search-result-item" onclick="closeSearchPanel(); AppState.navigate('student-detail', {studentId:'${s.id}'});">
-          <div class="search-result-icon student">👨‍🎓</div>
+          <div class="search-result-icon student"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
           <div class="search-result-info">
             <div class="search-result-title">${s.name}</div>
             <div class="search-result-meta">${getClassName(s.classId)} • Roll No. ${s.rollNo}</div>
@@ -1554,7 +1554,7 @@ function handleSearchInput(query) {
     clsResults.forEach(c => {
       results += `
         <div class="search-result-item" onclick="closeSearchPanel(); AppState.navigate('class-detail', {classId:'${c.id}'});">
-          <div class="search-result-icon class">🏫</div>
+          <div class="search-result-icon class"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div>
           <div class="search-result-info">
             <div class="search-result-title">${c.name}</div>
             <div class="search-result-meta">${c.studentCount} students • ${c.subjects.length} subjects</div>
@@ -2051,7 +2051,9 @@ function renderJournal() {
         <div class="flex items-center gap-3">
           <h1>Teacher's Reflection Safe</h1>
           <span class="safe-header-badge" onclick="toggleSafeLock()" style="cursor:pointer">
-            ${AppState.safeUnlocked ? '🔓 Safe Unlocked' : '🔒 Safe Protected'}
+            ${AppState.safeUnlocked
+              ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>Safe Unlocked'
+              : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>Safe Protected'}
           </span>
         </div>
         <p>A private sanctuary to record daily experiences, classroom triumphs, and emotions with calendar emoji stickers.</p>
@@ -2366,8 +2368,8 @@ function renderClasses() {
               <h3>${cls.name}</h3>
               <div class="class-card-section">Section ${cls.section} • Grade ${cls.grade}</div>
               <div class="class-card-info">
-                <div class="class-card-info-item">👨‍🎓 <span>${cls.studentCount}</span> students</div>
-                <div class="class-card-info-item">📚 <span>${cls.subjects.length}</span> subjects</div>
+                <div class="class-card-info-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg><span>${cls.studentCount}</span> students</div>
+                <div class="class-card-info-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg><span>${cls.subjects.length}</span> subjects</div>
               </div>
               <div class="class-card-subjects">
                 ${subjects.map(s => `<span class="badge badge-blue">${s.name} (${s.progress}%)</span>`).join('')}
@@ -2434,7 +2436,7 @@ function renderClassOverview(cls, students) {
         const p = getSyllabusProgress(s, cls.id);
         return `
           <div class="card card-elevated stat-card" onclick="AppState.navigate('syllabus')">
-            <div class="stat-card-icon blue">📋</div>
+            <div class="stat-card-icon blue"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg></div>
             <div class="stat-card-info">
               <div class="stat-card-label">${s}</div>
               <div class="stat-card-value">${p}%</div>
@@ -2444,7 +2446,7 @@ function renderClassOverview(cls, students) {
         `;
       }).join('')}
       <div class="card card-elevated stat-card">
-        <div class="stat-card-icon green">👨‍🎓</div>
+        <div class="stat-card-icon green"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
         <div class="stat-card-info">
           <div class="stat-card-label">Average Attendance</div>
           <div class="stat-card-value">${Math.round(students.reduce((a, s) => a + s.attendance, 0) / (students.length || 1))}%</div>
@@ -2517,13 +2519,13 @@ function renderClassStudents(students) {
 function renderClassJournal(journals) {
   return journals.length
     ? `<div class="flex flex-col gap-4 stagger-children">${journals.map(j => renderJournalCard(j)).join('')}</div>`
-    : `<div class="empty-state"><div class="empty-state-icon">📝</div><h3>No Journal Entries</h3><p>Start recording your teaching activities for this class.</p><button class="btn btn-primary" onclick="showJournalModal()">+ New Entry</button></div>`;
+    : `<div class="empty-state"><div class="empty-state-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg></div><h3>No Journal Entries</h3><p>Start recording your teaching activities for this class.</p><button class="btn btn-primary" onclick="showJournalModal()">+ New Entry</button></div>`;
 }
 
 function renderClassMaterials(materials) {
   return materials.length
     ? `<div class="materials-grid stagger-children">${materials.map(m => renderMaterialCard(m)).join('')}</div>`
-    : `<div class="empty-state"><div class="empty-state-icon">📚</div><h3>No Materials</h3><p>Upload teaching materials for this class.</p><button class="btn btn-primary" onclick="showMaterialModal()">+ Upload</button></div>`;
+    : `<div class="empty-state"><div class="empty-state-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div><h3>No Materials</h3><p>Upload teaching materials for this class.</p><button class="btn btn-primary" onclick="showMaterialModal()">+ Upload</button></div>`;
 }
 
 function showClassModal() {
@@ -3325,7 +3327,7 @@ function showShareQuizModal(studentId) {
     </div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal()">Close</button>
-      <button class="btn btn-primary" onclick="closeModal(); showAnswerQuizModal('${studentId}');">Open Student Answer Portal ✍️</button>
+      <button class="btn btn-primary" onclick="closeModal(); showAnswerQuizModal('${studentId}');">Open Student Answer Portal</button>
     </div>
   `);
 }
@@ -3412,10 +3414,10 @@ function renderMaterials() {
     <!-- Materials Tab Navigation -->
     <div class="materials-tab-nav mb-5" style="display:flex;gap:12px;border-bottom:2px solid var(--neutral-200);padding-bottom:12px">
       <button class="btn ${activeTab === 'resources' ? 'btn-primary' : 'btn-secondary'}" onclick="switchMaterialsTab('resources')">
-        📁 Teaching Resources & Files (${MOCK_DATA.materials.length})
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>Teaching Resources & Files (${MOCK_DATA.materials.length})
       </button>
       <button class="btn ${activeTab === 'records' ? 'btn-primary' : 'btn-secondary'}" onclick="switchMaterialsTab('records')">
-        📖 Curriculum & Lesson Records (${MOCK_DATA.journal.length})
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>Curriculum & Lesson Records (${MOCK_DATA.journal.length})
       </button>
     </div>
 
@@ -3510,7 +3512,7 @@ function renderLessonRecordCard(entry) {
 
       <div class="flex justify-between items-center text-xs text-muted pt-2" style="border-top:1px solid var(--neutral-150)">
         <span>Homework: <strong>${entry.homework || 'None'}</strong></span>
-        <span>${entry.materials?.length || 0} Materials Linked 📎</span>
+        <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>${entry.materials?.length || 0} Materials Linked</span>
       </div>
     </div>
   `;
@@ -3530,7 +3532,7 @@ function filterLessonRecords() {
   if (grid) {
     grid.innerHTML = filtered.length
       ? filtered.map(j => renderLessonRecordCard(j)).join('')
-      : `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">📖</div><h3>No lesson records found</h3><p>Try modifying your search or class filters.</p></div>`;
+      : `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div><h3>No lesson records found</h3><p>Try modifying your search or class filters.</p></div>`;
   }
 }
 
@@ -3577,7 +3579,7 @@ function viewLessonRecord(id) {
         <div class="flex gap-2 flex-wrap">
           ${(entry.materials || []).map(matId => {
             const m = MOCK_DATA.materials.find(x => x.id === matId);
-            return `<span class="badge badge-neutral">📎 ${m ? m.name : matId}</span>`;
+            return `<span class="badge badge-neutral"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>${m ? m.name : matId}</span>`;
           }).join('') || '<span class="text-xs text-muted">No external files attached.</span>'}
         </div>
       </div>
@@ -3705,7 +3707,7 @@ function filterMaterials() {
   if (grid) {
     grid.innerHTML = filtered.length
       ? filtered.map(m => renderMaterialCard(m)).join('')
-      : `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon">📚</div><h3>No materials found</h3><p>Try adjusting your filters or upload a new material.</p><button class="btn btn-primary" onclick="showMaterialModal()">+ Upload</button></div>`;
+      : `<div class="empty-state" style="grid-column:1/-1"><div class="empty-state-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></div><h3>No materials found</h3><p>Try adjusting your filters or upload a new material.</p><button class="btn btn-primary" onclick="showMaterialModal()">+ Upload</button></div>`;
   }
 }
 
@@ -3800,7 +3802,7 @@ function showMaterialModal() {
       <div class="form-group">
         <label class="form-label">File</label>
         <div style="border:2px dashed var(--neutral-200);border-radius:var(--radius-lg);padding:var(--space-8);text-align:center;cursor:pointer;transition:all var(--transition-fast)" onmouseover="this.style.borderColor='var(--primary-300)'" onmouseout="this.style.borderColor='var(--neutral-200)'">
-          <div style="font-size:2rem;margin-bottom:var(--space-2)">📎</div>
+          <div style="margin-bottom:var(--space-2)"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--primary-500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg></div>
           <p class="text-sm text-muted">Click to select a file or drag and drop</p>
           <p class="text-xs text-muted mt-1">PDF, PPT, DOC, Images up to 10MB</p>
         </div>
@@ -3879,7 +3881,7 @@ function renderSyllabus() {
     <!-- Progress Summary -->
     <div class="stats-grid mb-6 stagger-children">
       <div class="card card-elevated stat-card">
-        <div class="stat-card-icon blue">📊</div>
+        <div class="stat-card-icon blue"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></div>
         <div class="stat-card-info">
           <div class="stat-card-label">Overall Progress</div>
           <div class="stat-card-value">${overallProgress}%</div>
@@ -3895,7 +3897,7 @@ function renderSyllabus() {
         </div>
       </div>
       <div class="card card-elevated stat-card">
-        <div class="stat-card-icon amber">⏳</div>
+        <div class="stat-card-icon amber"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
         <div class="stat-card-info">
           <div class="stat-card-label">In Progress</div>
           <div class="stat-card-value">${inProgressTopics}</div>
@@ -3903,7 +3905,7 @@ function renderSyllabus() {
         </div>
       </div>
       <div class="card card-elevated stat-card">
-        <div class="stat-card-icon red">📋</div>
+        <div class="stat-card-icon red"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg></div>
         <div class="stat-card-info">
           <div class="stat-card-label">Remaining</div>
           <div class="stat-card-value">${totalTopics - completedTopics - inProgressTopics}</div>
@@ -3951,10 +3953,10 @@ function renderSyllabus() {
                   
                   <div class="flex items-center gap-1 ml-2">
                     <button class="btn btn-ghost btn-sm" title="Edit Topic" style="padding:4px 8px;font-size:0.8rem" onclick="showEditTopicModal('${activeSubject}', '${activeClass}', '${ch.id}', '${t.id}')">
-                      ✏️
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                     </button>
                     <button class="btn btn-ghost btn-sm" title="Delete Topic / Task" style="padding:4px 8px;font-size:0.8rem;color:var(--danger-500)" onclick="deleteTopic('${activeSubject}', '${activeClass}', '${ch.id}', '${t.id}')">
-                      🗑️
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                     </button>
                   </div>
                 </div>
@@ -3968,7 +3970,7 @@ function renderSyllabus() {
         `;
       }).join('') : `
         <div class="empty-state">
-          <div class="empty-state-icon">📋</div>
+          <div class="empty-state-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg></div>
           <h3>No syllabus data</h3>
           <p>No chapters found for ${activeSubject} in ${getClassName(activeClass)}. Click below to create one:</p>
           <button class="btn btn-primary mt-3" onclick="showAddChapterModal('${activeSubject}', '${activeClass}')">+ Add First Chapter</button>
@@ -4214,22 +4216,22 @@ function renderReports() {
 
     <div class="report-type-grid stagger-children">
       <div class="card report-type-card ${selectedReport === 'journal' ? 'selected' : ''}" onclick="selectReportType('journal')">
-        <div class="report-type-icon stat-card-icon blue">📝</div>
+        <div class="report-type-icon stat-card-icon blue"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg></div>
         <h3>Journal Report</h3>
         <p>Summary of teaching activities</p>
       </div>
       <div class="card report-type-card ${selectedReport === 'syllabus' ? 'selected' : ''}" onclick="selectReportType('syllabus')">
-        <div class="report-type-icon stat-card-icon green">📋</div>
+        <div class="report-type-icon stat-card-icon green"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></div>
         <h3>Syllabus Report</h3>
         <p>Syllabus completion status</p>
       </div>
       <div class="card report-type-card ${selectedReport === 'progress' ? 'selected' : ''}" onclick="selectReportType('progress')">
-        <div class="report-type-icon stat-card-icon amber">📊</div>
+        <div class="report-type-icon stat-card-icon amber"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></div>
         <h3>Progress Report</h3>
         <p>Student performance overview</p>
       </div>
       <div class="card report-type-card ${selectedReport === 'class' ? 'selected' : ''}" onclick="selectReportType('class')">
-        <div class="report-type-icon stat-card-icon cyan">🏫</div>
+        <div class="report-type-icon stat-card-icon cyan"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
         <h3>Class Report</h3>
         <p>Overall class summary</p>
       </div>
@@ -4246,7 +4248,7 @@ function renderReports() {
         <option value="Mathematics">Mathematics</option>
         <option value="Social Science">Social Science</option>
       </select>
-      <button class="btn btn-primary" onclick="window.print()">🖨️ Print Report</button>
+      <button class="btn btn-primary" onclick="window.print()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:6px"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>Print Report</button>
     </div>
 
     <div class="report-preview" id="report-preview">
@@ -4292,7 +4294,7 @@ function generateJournalReport(classFilter, subjectFilter) {
 
   return `
     <div class="report-preview-title">
-      <h2>📝 Journal Report</h2>
+      <h2>Journal Report</h2>
       <p>Teaching Activity Summary • Generated ${formatDate(getToday())}</p>
     </div>
     <div class="mb-4">
@@ -4339,7 +4341,7 @@ function generateSyllabusReport(classFilter, subjectFilter) {
 
   return `
     <div class="report-preview-title">
-      <h2>📋 Syllabus Completion Report</h2>
+      <h2>Syllabus Completion Report</h2>
       <p>Subject-wise Progress • Generated ${formatDate(getToday())}</p>
     </div>
     <div class="data-table-wrapper">
@@ -4375,7 +4377,7 @@ function generateProgressReport(classFilter) {
 
   return `
     <div class="report-preview-title">
-      <h2>📊 Student Progress Report</h2>
+      <h2>Student Progress Report</h2>
       <p>Performance Overview • Generated ${formatDate(getToday())}</p>
     </div>
     <div class="data-table-wrapper">
@@ -4404,7 +4406,7 @@ function generateClassReport(classFilter) {
 
   return `
     <div class="report-preview-title">
-      <h2>🏫 Class Report</h2>
+      <h2>Class Report</h2>
       <p>Academic Summary • Generated ${formatDate(getToday())}</p>
     </div>
     ${classes.map(cls => {
@@ -4465,7 +4467,7 @@ function renderSearchPage() {
       </div>
     </div>
     <div class="empty-state">
-      <div class="empty-state-icon">🔍</div>
+      <div class="empty-state-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></div>
       <h3>Use Global Search</h3>
       <p>Press Ctrl+K to open the search panel and find anything across your workspace.</p>
       <button class="btn btn-primary" onclick="openSearchPanel()">Open Search</button>
