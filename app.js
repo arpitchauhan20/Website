@@ -268,6 +268,9 @@ function getQuoteForMood(rating) {
 function selectMood(score) {
   AppState.currentMood = score;
   AppState.selectedMoodQuote = getQuoteForMood(score);
+  showToast('Reflection Saved', `Daily teaching mindset updated: ${score}/10 (${getMoodLabel(score)})`, 'success');
+  renderApp();
+}
   
 function updateSpeedoZoneDOM(zoneEl, txtEl, score) {
   if (zoneEl) {
@@ -817,37 +820,44 @@ function renderLogin() {
               <span class="brand-badge-dot"></span>
               <span class="brand-badge-text">TeachTrack</span>
             </div>
-            <h1 class="login-form-title">Welcome Back</h1>
-            <p class="login-form-subtitle">Enter your credentials to access your teacher workspace.</p>
+            <div class="demo-sandbox-tag">Interactive Academic Demo Project</div>
+            <h1 class="login-form-title">Faculty Workspace</h1>
+            <p class="login-form-subtitle">Open simulation dashboard for educators & teaching teams.</p>
           </div>
 
-          <div class="login-demo-pill" onclick="document.getElementById('login-email').value='ishita.sharma@school.edu';document.getElementById('login-password').value='password'" title="Click to autofill demo credentials">
-            <span><strong>Quick Demo:</strong> Prof. Ishita Sharma</span>
+          <!-- Instant 1-Click Demo Entry -->
+          <button type="button" class="btn-demo-instant" onclick="AppState.login()" title="Launch Faculty Dashboard immediately">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <span>Launch Dashboard (Prof. Ishita Sharma)</span>
+          </button>
+
+          <div class="login-divider-text">
+            <span>or sign in simulation</span>
           </div>
 
           <form class="login-form" id="login-form" onsubmit="event.preventDefault(); AppState.login();">
             <div class="login-field">
-              <label for="login-email">Email Address</label>
+              <label for="login-email">Faculty Email (Demo)</label>
               <div class="login-input-wrap">
-                <input type="email" id="login-email" placeholder="ishita.sharma@school.edu" value="ishita.sharma@school.edu" required>
+                <input type="email" id="login-email" autocomplete="off" placeholder="ishita.sharma@demo.teachtrack.io" value="ishita.sharma@demo.teachtrack.io" required>
               </div>
             </div>
             <div class="login-field">
-              <label for="login-password">Password</label>
+              <label for="login-password">Demo Passcode</label>
               <div class="login-input-wrap">
-                <input type="password" id="login-password" placeholder="Enter your password" value="password" required>
+                <input type="password" id="login-password" autocomplete="off" placeholder="••••••••" value="demo1234" required>
               </div>
             </div>
             <div class="login-options">
-              <label class="login-remember"><input type="checkbox" checked> <span>Remember me</span></label>
-              <a href="#" class="login-forgot" onclick="AppState.currentPage='forgot-password'; renderApp(); return false;">Forgot password?</a>
+              <label class="login-remember"><input type="checkbox" checked> <span>Remember session</span></label>
+              <a href="#" class="login-forgot" onclick="AppState.currentPage='forgot-password'; renderApp(); return false;">Reset passcode?</a>
             </div>
             <button type="submit" class="login-submit-btn" id="login-submit-btn">
-              <span class="login-btn-text">Sign In</span>
+              <span class="login-btn-text">Sign In to Workspace</span>
             </button>
           </form>
           <div class="login-footer">
-            Don't have an account? <a href="#" onclick="AppState.currentPage='signup'; renderApp(); return false;">Create account</a>
+            New faculty member? <a href="#" onclick="AppState.currentPage='signup'; renderApp(); return false;">Create Demo Profile</a>
           </div>
         </div>
       </div>
@@ -877,35 +887,36 @@ function renderSignup() {
               <span class="brand-badge-dot"></span>
               <span class="brand-badge-text">TeachTrack</span>
             </div>
-            <h1 class="login-form-title">Create Account</h1>
-            <p class="login-form-subtitle">Register your educator profile in seconds.</p>
+            <div class="demo-sandbox-tag">Interactive Academic Demo Project</div>
+            <h1 class="login-form-title">Create Faculty Profile</h1>
+            <p class="login-form-subtitle">Register your demo educator profile in seconds.</p>
           </div>
 
           <form class="login-form" id="signup-form" onsubmit="event.preventDefault(); AppState.login();">
             <div class="login-field">
-              <label for="signup-name">Full Name</label>
+              <label for="signup-name">Faculty Full Name</label>
               <div class="login-input-wrap">
-                <input type="text" id="signup-name" placeholder="Prof. Ishita Sharma" value="Prof. Ishita Sharma" required>
+                <input type="text" id="signup-name" autocomplete="off" placeholder="Prof. Ishita Sharma" value="Prof. Ishita Sharma" required>
               </div>
             </div>
             <div class="login-field">
-              <label for="signup-email">Email Address</label>
+              <label for="signup-email">Faculty Email (Demo)</label>
               <div class="login-input-wrap">
-                <input type="email" id="signup-email" placeholder="teacher@school.edu" value="ishita.sharma@school.edu" required>
+                <input type="email" id="signup-email" autocomplete="off" placeholder="ishita.sharma@demo.teachtrack.io" value="ishita.sharma@demo.teachtrack.io" required>
               </div>
             </div>
             <div class="login-field">
-              <label for="signup-password">Password</label>
+              <label for="signup-password">Demo Passcode</label>
               <div class="login-input-wrap">
-                <input type="password" id="signup-password" placeholder="Create a secure password" value="password" required>
+                <input type="password" id="signup-password" autocomplete="off" placeholder="••••••••" value="demo1234" required>
               </div>
             </div>
             <button type="submit" class="login-submit-btn">
-              <span class="login-btn-text">Create Account</span>
+              <span class="login-btn-text">Create Profile & Launch</span>
             </button>
           </form>
           <div class="login-footer">
-            Already have an account? <a href="#" onclick="AppState.currentPage='login'; renderApp(); return false;">Sign in</a>
+            Already registered? <a href="#" onclick="AppState.currentPage='login'; renderApp(); return false;">Return to Sign In</a>
           </div>
         </div>
       </div>
@@ -932,23 +943,24 @@ function renderForgotPassword() {
               <span class="brand-badge-dot"></span>
               <span class="brand-badge-text">TeachTrack</span>
             </div>
-            <h1 class="login-form-title">Reset Password</h1>
-            <p class="login-form-subtitle">Enter your institutional email to receive a recovery link.</p>
+            <div class="demo-sandbox-tag">Interactive Academic Demo Project</div>
+            <h1 class="login-form-title">Reset Demo Access</h1>
+            <p class="login-form-subtitle">Enter your demo address to reset session credentials.</p>
           </div>
 
           <form class="login-form" id="forgot-form" onsubmit="event.preventDefault(); handleForgotSubmit();">
             <div class="login-field">
-              <label for="forgot-email">Email Address</label>
+              <label for="forgot-email">Faculty Email (Demo)</label>
               <div class="login-input-wrap">
-                <input type="email" id="forgot-email" placeholder="teacher@school.edu" value="ishita.sharma@school.edu" required>
+                <input type="email" id="forgot-email" autocomplete="off" placeholder="ishita.sharma@demo.teachtrack.io" value="ishita.sharma@demo.teachtrack.io" required>
               </div>
             </div>
             <button type="submit" class="login-submit-btn">
-              <span class="login-btn-text">Send Reset Link</span>
+              <span class="login-btn-text">Send Demo Reset Link</span>
             </button>
           </form>
           <div class="login-footer">
-            Remember your password? <a href="#" onclick="AppState.currentPage='login'; renderApp(); return false;">Back to Sign In</a>
+            Remember your credentials? <a href="#" onclick="AppState.currentPage='login'; renderApp(); return false;">Back to Sign In</a>
           </div>
         </div>
       </div>
