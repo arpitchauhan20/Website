@@ -4,28 +4,28 @@
 // =====================================================
 
 const MOCK_DATA = {
-  // Current user / Teacher Profile Data
+  // Current user / Teacher Profile Data — Prof. Ishita Sharma
   user: {
     id: 'u1',
-    name: 'Anita Sharma',
-    email: 'anita.sharma@school.edu',
-    role: 'Senior TGT Educator (STEM)',
-    initials: 'AS',
+    name: 'Ishita Sharma',
+    email: 'ishita.sharma@school.edu',
+    role: 'Senior TGT English Literature & Language',
+    initials: 'IS',
     employeeId: 'TCH-2018-0842',
-    qualification: 'M.Sc. Physics, B.Ed. (Gold Medalist)',
+    qualification: 'M.A. English Literature, B.Ed. (Gold Medalist)',
     phone: '+91 98765 43210',
     address: 'Flat 402, Lotus Orchid Enclave, Green Avenue, New Delhi',
-    department: 'Science & Mathematics',
+    department: 'Department of English & Humanities',
     joinDate: '2018-07-15',
     totalExperience: '8+ Years',
     avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&auto=format&fit=crop&q=80',
-    subjects: ['Science', 'Mathematics'],
+    subjects: ['English Literature', 'Creative Writing', 'Grammar & Composition'],
     assignedClasses: ['c1', 'c2', 'c3'],
-    bio: 'Passionate educator committed to experiential science learning, concept visualization, and creating an inclusive classroom where every child blooms.',
+    bio: 'Passionate English educator inspiring student voices through literature, creative writing workshops, critical text analysis, and joyful classroom discourse.',
     achievements: [
-      'National STEM Mentor of the Year 2024',
-      'Innovation in Experiential Pedagogy Award',
-      '100% Distinction Rate in Class 9 Science'
+      'National Literature Educator of the Year 2024',
+      'Creative Pedagogy Fellowship in Humanities',
+      '100% Distinction Rate in Class 9 English Board Examinations'
     ]
   },
 
@@ -33,48 +33,108 @@ const MOCK_DATA = {
   teacherTasks: [
     {
       id: 'tk1',
-      title: 'Conduct Food Nutrient Starch & Iodine Test experiment with Class 6A',
-      subject: 'Science',
-      className: 'Class 6A',
+      title: 'Guide Poetic Imagery & Metaphor seminar on Robert Frost with Class 8A',
+      subject: 'English Literature',
+      className: 'Class 8A',
       completed: true,
       timeEst: '45 mins',
-      review: 'Brilliant classroom engagement! All students successfully identified starch in potato samples. Diya and Aarav helped organize lab kits.'
+      review: 'Exceptional classroom engagement! Students connected the themes of choice and individuality in Frost with personal reflections. Ananya and Rohan shared brilliant interpretations.'
     },
     {
       id: 'tk2',
-      title: 'Grade integers subtraction worksheet for Class 7B',
-      subject: 'Mathematics',
+      title: 'Review and provide personalized feedback on Flash Fiction stories for Class 7B',
+      subject: 'Creative Writing',
       className: 'Class 7B',
       completed: true,
       timeEst: '30 mins',
-      review: '22 out of 28 students mastered the negative integer rules. Need a 5-minute revision on brackets tomorrow morning.'
+      review: '24 out of 28 students demonstrated great sensory detail. Plan a 10-minute micro-lesson on dialogue punctuation tomorrow.'
     },
     {
       id: 'tk3',
-      title: 'Formulate formative quiz questions on Crop Production & Irrigation for Class 8A',
-      subject: 'Science',
-      className: 'Class 8A',
+      title: 'Formulate formative quiz questions on Shakespearean Drama & Character Motifs for Class 9A',
+      subject: 'English Literature',
+      className: 'Class 9A',
       completed: true,
       timeEst: '25 mins',
-      review: 'Questions created and shared via the student hub. Kavya and Aditya scored full marks within 10 minutes.'
+      review: 'Interactive quiz set and shared via the classroom portal. Kabir and Priya aced the soliloquy analysis.'
     },
     {
       id: 'tk4',
-      title: 'Call Kabir Singh parent regarding attendance & Science project support',
-      subject: 'Parent Outreach',
-      className: 'Class 6A',
+      title: 'Host parent discussion regarding student public speaking & debate club mentorship',
+      subject: 'Student Mentorship',
+      className: 'Class 8A',
       completed: false,
-      timeEst: '15 mins',
+      timeEst: '20 mins',
       review: ''
     },
     {
       id: 'tk5',
-      title: 'Prepare digital revision slides on Equations of Motion for Class 9A',
-      subject: 'Science',
-      className: 'Class 9A',
+      title: 'Prepare digital revision slides on Active-Passive Voice transformation for Class 6A',
+      subject: 'Grammar',
+      className: 'Class 6A',
       completed: false,
-      timeEst: '40 mins',
+      timeEst: '35 mins',
       review: ''
+    }
+  ],
+
+  // Mood Quotes library for Speedometer Mood Gauge
+  moodQuotes: [
+    {
+      min: 1, max: 3,
+      zone: 'recharge',
+      zoneLabel: 'Recharging & Restorative',
+      quote: "Give yourself permission to pause. Even the quietest chapters in literature hold profound strength.",
+      author: "Virginia Woolf"
+    },
+    {
+      min: 1, max: 3,
+      zone: 'recharge',
+      zoneLabel: 'Recharging & Restorative',
+      quote: "Teaching is an act of deep heart. On heavy days, simply showing up with kindness is a monumental victory.",
+      author: "Parker J. Palmer"
+    },
+    {
+      min: 4, max: 6,
+      zone: 'steady',
+      zoneLabel: 'Steady & Grounded',
+      quote: "Words have the power to create light in unexpected places. Take this day one steady sentence at a time.",
+      author: "Emily Dickinson"
+    },
+    {
+      min: 4, max: 6,
+      zone: 'steady',
+      zoneLabel: 'Steady & Grounded',
+      quote: "The art of teaching is the art of assisting discovery. Steady patience turns curiosity into lasting understanding.",
+      author: "Mark Van Doren"
+    },
+    {
+      min: 7, max: 8,
+      zone: 'energized',
+      zoneLabel: 'Energized & Inspired',
+      quote: "Literature is the immortality of speech. Your passion today sparks a lifelong love for reading in your students.",
+      author: "Ralph Waldo Emerson"
+    },
+    {
+      min: 7, max: 8,
+      zone: 'energized',
+      zoneLabel: 'Energized & Inspired',
+      quote: "When a teacher brings enthusiasm into the room, every page of the book comes alive with vibrant possibility.",
+      author: "Maya Angelou"
+    },
+    {
+      min: 9, max: 10,
+      zone: 'peak',
+      zoneLabel: 'Peak Creative Flow',
+      quote: "You are weaving ideas into memories that will echo for decades. Ride this radiant momentum to inspire greatness!",
+      author: "Rabindranath Tagore"
+    },
+    {
+      min: 9, max: 10,
+      zone: 'peak',
+      zoneLabel: 'Peak Creative Flow',
+      quote: "One child, one teacher, one book, one pen can change the entire world. Celebrate your extraordinary impact.",
+      author: "Malala Yousafzai"
     }
   ],
 

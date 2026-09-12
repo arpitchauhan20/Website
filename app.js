@@ -228,27 +228,32 @@ function closeModal() {
 // =====================================================
 // Render Engine
 // =====================================================
-function getMoodEmoji(rating) {
-  const emojis = {
-    1: '😭', 2: '😢', 3: '😞', 4: '😕', 5: '😐',
-    6: '🙂', 7: '😊', 8: '😄', 9: '🤩', 10: '🌟'
-  };
-  return emojis[rating] || '😊';
+// Speedometer Mood & Pedagogical Energy Engine
+// =====================================================
+function getMoodZone(score) {
+  if (score <= 3) return 'zone-recharge';
+  if (score <= 6) return 'zone-steady';
+  if (score <= 8) return 'zone-energized';
+  return 'zone-peak';
 }
 
-function getMoodLabel(rating) {
-  if (rating <= 2) return 'Tough Day';
-  if (rating <= 4) return 'Feeling Heavy';
-  if (rating <= 6) return 'Okay & Steady';
-  if (rating <= 8) return 'Positive & Good';
-  return 'Thriving & Radiant';
+function getMoodZoneLabel(score) {
+  if (score <= 3) return 'Restorative / Gentle Pace';
+  if (score <= 6) return 'Steady & Grounded';
+  if (score <= 8) return 'Energized & Inspired';
+  return 'Peak Creative Flow';
+}
+
+function getMoodLabel(score) {
+  return getMoodZoneLabel(score);
 }
 
 function getQuoteForMood(rating) {
   if (!MOCK_DATA.moodQuotes || !MOCK_DATA.moodQuotes.length) {
     return {
-      quote: "Breathe, dear educator. Your presence and kindness alone make an enduring difference in every child's life.",
-      author: "Heart of a Teacher"
+      quote: "Words have the power to create light in unexpected places. Take this day one steady sentence at a time.",
+      author: "Emily Dickinson",
+      zoneLabel: "Steady & Grounded"
     };
   }
   const matching = MOCK_DATA.moodQuotes.filter(q => q.min <= rating && q.max >= rating);
@@ -261,25 +266,119 @@ function getQuoteForMood(rating) {
 function selectMood(score) {
   AppState.currentMood = score;
   AppState.selectedMoodQuote = getQuoteForMood(score);
-  // Re-render
+  
   if (AppState.currentPage === 'dashboard') {
-    // Keep the greeting state during mood selection
     const prevGreeting = AppState.showDashboardGreeting;
     AppState.showDashboardGreeting = false;
     AppState.greetingAnimationDone = true;
     renderApp();
   } else {
-    showToast('Mood Logged', `Logged mood: ${getMoodEmoji(score)} ${score}/10 — ${getMoodLabel(score)}`, 'info');
+    showToast('Mood Logged', `Energy Velocity: ${score}/10 — ${getMoodLabel(score)}`, 'info');
     renderApp();
   }
 }
 
 function shuffleMoodQuote() {
   AppState.selectedMoodQuote = getQuoteForMood(AppState.currentMood);
-  // Don't re-trigger greeting animation on quote shuffle
   AppState.showDashboardGreeting = false;
   AppState.greetingAnimationDone = true;
   renderApp();
+}
+
+function saveSpeedoReflection() {
+  const input = document.getElementById('speedo-reflection-text');
+  const text = input ? input.value.trim() : '';
+  if (!text) {
+    showToast('Reflection Note Empty', 'Please write a brief intention before logging.', 'error');
+    return;
+  }
+  const todayStr = getToday();
+  let entry = MOCK_DATA.teacherSafeJournal.find(e => e.date === todayStr);
+  if (entry) {
+    entry.experience = (entry.experience ? entry.experience + '\n\n' : '') + `[Velocity ${AppState.currentMood}/10] ${text}`;
+    entry.moodScore = AppState.currentMood;
+  } else {
+    MOCK_DATA.teacherSafeJournal.push({
+      id: generateId(),
+      date: todayStr,
+      title: 'Daily Teaching Intention',
+      experience: `[Velocity ${AppState.currentMood}/10] ${text}`,
+      emojiStickers: ['🌿'],
+      moodScore: AppState.currentMood
+    });
+  }
+  if (input) input.value = '';
+  showToast('Intention Recorded', `Your thought has been saved to your Teacher Safe.`, 'success');
+  renderApp();
+}
+
+function renderSpeedometer(score) {
+  const angle = -75 + (score - 1) * (150 / 9);
+  
+  // Ticks calculation around 150-degree semi-arc
+  const ticks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(s => {
+    const a = -75 + (s - 1) * (150 / 9);
+    const rad = (a - 90) * Math.PI / 180;
+    const x1 = Math.round(170 + 96 * Math.cos(rad));
+    const y1 = Math.round(152 + 96 * Math.sin(rad));
+    const x2 = Math.round(170 + 114 * Math.cos(rad));
+    const y2 = Math.round(152 + 114 * Math.sin(rad));
+    const tx = Math.round(170 + 130 * Math.cos(rad));
+    const ty = Math.round(152 + 130 * Math.sin(rad));
+    const isSelected = s === score;
+    return `
+      <line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="speedo-tick ${isSelected ? 'active' : ''}" />
+      <text x="${tx}" y="${ty + 4}" class="speedo-number ${isSelected ? 'active' : ''}" text-anchor="middle" onclick="selectMood(${s})">${s}</text>
+    `;
+  }).join('');
+
+  return `
+    <div class="speedometer-widget">
+      <svg viewBox="0 0 340 190" class="speedometer-svg" aria-label="Teacher Speedometer Mood Gauge">
+        <defs>
+          <linearGradient id="speedoTrackGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#DCA278" />
+            <stop offset="35%" stop-color="#E8BA85" />
+            <stop offset="70%" stop-color="#9EB07A" />
+            <stop offset="100%" stop-color="#5B8C5A" />
+          </linearGradient>
+          <filter id="speedoNeedleShadow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="rgba(0,0,0,0.25)" />
+          </filter>
+        </defs>
+
+        <!-- Outer Track Background -->
+        <path d="M 58.8,181 A 115,115 0 0,1 281.2,181" fill="none" stroke="rgba(220,162,120,0.18)" stroke-width="22" stroke-linecap="round" />
+        
+        <!-- Colored Gradient Active Arc -->
+        <path d="M 58.8,181 A 115,115 0 0,1 281.2,181" fill="none" stroke="url(#speedoTrackGrad)" stroke-width="14" stroke-linecap="round" />
+
+        <!-- Ticks and Numbers -->
+        ${ticks}
+
+        <!-- Rotating Speedometer Needle -->
+        <g class="speedometer-needle-group" style="transform: rotate(${angle}deg); transform-origin: 170px 152px;" filter="url(#speedoNeedleShadow)">
+          <polygon points="166,152 174,152 171.5,44 168.5,44" fill="#2E2420" />
+          <polygon points="168,62 172,62 171,38 169,38" fill="#DCA278" />
+          <circle cx="170" cy="152" r="14" fill="#2E2420" />
+          <circle cx="170" cy="152" r="8" fill="#FFF9E2" />
+          <circle cx="170" cy="152" r="4" fill="#8D532B" />
+        </g>
+      </svg>
+
+      <!-- Center Digital Gauge Readout -->
+      <div class="speedometer-digital-readout">
+        <div class="speedo-score-row">
+          <span class="speedo-score-number">${score}</span>
+          <span class="speedo-score-denom">/ 10</span>
+        </div>
+        <div class="speedo-zone-pill ${getMoodZone(score)}">
+          <span class="speedo-zone-dot"></span>
+          <span>${getMoodLabel(score)}</span>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 function showMoodCheckInModal() {
@@ -287,49 +386,42 @@ function showMoodCheckInModal() {
     AppState.selectedMoodQuote = getQuoteForMood(AppState.currentMood);
   }
   const quote = AppState.selectedMoodQuote;
-  const isComforting = AppState.currentMood <= 6;
+  const zoneClass = getMoodZone(AppState.currentMood);
 
   showModal(`
     <div class="modal-header">
       <div class="flex items-center gap-2">
-        <span style="font-size:1.4rem">✨</span>
+        <div class="brand-badge-dot"></div>
         <div>
-          <h2>Educator Mindset & Mood Check-In</h2>
-          <p class="text-xs text-muted">Take a mindful pause to rate how you are feeling right now</p>
+          <h2>Teacher Mindset & Energy Velocity</h2>
+          <p class="text-xs text-muted">Calibrate your teaching focus and emotional vitality</p>
         </div>
       </div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body" style="padding:var(--space-6)">
-      <div class="mood-score-badge" style="margin-bottom:var(--space-4);justify-content:center">
-        <span style="font-size:1.5rem">${getMoodEmoji(AppState.currentMood)}</span>
-        <span style="font-size:1.1rem;font-weight:700">${AppState.currentMood} / 10 — ${getMoodLabel(AppState.currentMood)}</span>
+      ${renderSpeedometer(AppState.currentMood)}
+
+      <div class="speedo-selector-strip modal-mode" style="margin-top:20px">
+        <div class="speedo-pills-row">
+          ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(s => `
+            <button class="speedo-num-btn ${getMoodZone(s)} ${s === AppState.currentMood ? 'active' : ''}" onclick="selectModalMood(${s})">
+              ${s}
+            </button>
+          `).join('')}
+        </div>
       </div>
 
-      <p class="text-xs text-muted text-center mb-3">Rate your current mindset (1 = Tough/Stressed, 10 = Thriving):</p>
-      
-      <div class="mood-ratings-row" style="justify-content:center;margin-bottom:var(--space-5);flex-wrap:wrap">
-        ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(score => `
-          <div class="mood-btn ${AppState.currentMood === score ? 'selected' : ''}" onclick="selectModalMood(${score})">
-            <span>${getMoodEmoji(score)}</span>
-            <span>${score}</span>
-          </div>
-        `).join('')}
-      </div>
-
-      <!-- Inspirational Quote Card -->
-      <div class="mood-quote-card ${isComforting ? 'comfort' : 'thrive'}" id="modal-mood-quote-box" style="margin-top:var(--space-2)">
-        <div class="mood-quote-icon">${isComforting ? '🌿' : '✨'}</div>
-        <blockquote>"${quote.quote}"</blockquote>
-        <div class="mood-quote-author">— ${quote.author}</div>
+      <!-- Pedagogical Insight Card -->
+      <div class="speedo-quote-card ${zoneClass}" style="margin-top:18px">
+        <div class="speedo-quote-badge">${quote.zoneLabel || getMoodLabel(AppState.currentMood)}</div>
+        <blockquote class="speedo-quote-body">"${quote.quote}"</blockquote>
+        <div class="speedo-quote-author">— ${quote.author}</div>
       </div>
     </div>
     <div class="modal-footer" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--space-3)">
-      <button class="btn btn-ghost btn-sm" onclick="closeModal(); AppState.navigate('dashboard')">Back to Dashboard →</button>
-      <div class="flex gap-2">
-        <button class="btn btn-secondary btn-sm" onclick="shuffleModalQuote()">🎲 New Quote</button>
-        <button class="btn btn-primary btn-sm" onclick="closeModal(); showToast('Mood Saved', 'Your mood has been logged successfully!', 'success'); renderApp();">Save & Done</button>
-      </div>
+      <button class="btn btn-secondary btn-sm" onclick="shuffleModalQuote()">New Reflection</button>
+      <button class="btn btn-primary btn-sm" onclick="closeModal(); showToast('Velocity Saved', 'Your teaching energy has been logged!', 'success'); renderApp();">Save & Done</button>
     </div>
   `, 'md');
 }
@@ -576,15 +668,15 @@ function renderLogin() {
             <p class="login-form-subtitle">Enter your credentials to access your teacher workspace.</p>
           </div>
 
-          <div class="login-demo-pill" onclick="document.getElementById('login-email').value='anita.sharma@school.edu';document.getElementById('login-password').value='password'" title="Click to autofill demo credentials">
-            <span><strong>Quick Demo:</strong> Prof. Anita Sharma</span>
+          <div class="login-demo-pill" onclick="document.getElementById('login-email').value='ishita.sharma@school.edu';document.getElementById('login-password').value='password'" title="Click to autofill demo credentials">
+            <span><strong>Quick Demo:</strong> Prof. Ishita Sharma</span>
           </div>
 
           <form class="login-form" id="login-form" onsubmit="event.preventDefault(); AppState.login();">
             <div class="login-field">
               <label for="login-email">Email Address</label>
               <div class="login-input-wrap">
-                <input type="email" id="login-email" placeholder="anita.sharma@school.edu" value="anita.sharma@school.edu" required>
+                <input type="email" id="login-email" placeholder="ishita.sharma@school.edu" value="ishita.sharma@school.edu" required>
               </div>
             </div>
             <div class="login-field">
@@ -640,13 +732,13 @@ function renderSignup() {
             <div class="login-field">
               <label for="signup-name">Full Name</label>
               <div class="login-input-wrap">
-                <input type="text" id="signup-name" placeholder="Prof. Anita Sharma" value="Prof. Anita Sharma" required>
+                <input type="text" id="signup-name" placeholder="Prof. Ishita Sharma" value="Prof. Ishita Sharma" required>
               </div>
             </div>
             <div class="login-field">
               <label for="signup-email">Email Address</label>
               <div class="login-input-wrap">
-                <input type="email" id="signup-email" placeholder="teacher@school.edu" value="anita.sharma@school.edu" required>
+                <input type="email" id="signup-email" placeholder="teacher@school.edu" value="ishita.sharma@school.edu" required>
               </div>
             </div>
             <div class="login-field">
@@ -695,7 +787,7 @@ function renderForgotPassword() {
             <div class="login-field">
               <label for="forgot-email">Email Address</label>
               <div class="login-input-wrap">
-                <input type="email" id="forgot-email" placeholder="teacher@school.edu" value="anita.sharma@school.edu" required>
+                <input type="email" id="forgot-email" placeholder="teacher@school.edu" value="ishita.sharma@school.edu" required>
               </div>
             </div>
             <button type="submit" class="login-submit-btn">
@@ -1359,6 +1451,9 @@ function saveNewTask() {
 // =====================================================
 // DASHBOARD
 // =====================================================
+// =====================================================
+// DASHBOARD — TEACHER WELLBEING & SPEEDOMETER MOOD HUB
+// =====================================================
 function renderDashboard() {
   const completedTasks = MOCK_DATA.teacherTasks.filter(t => t.completed).length;
   const totalTasks = MOCK_DATA.teacherTasks.length;
@@ -1371,116 +1466,205 @@ function renderDashboard() {
     AppState.selectedMoodQuote = getQuoteForMood(AppState.currentMood);
   }
   const quote = AppState.selectedMoodQuote;
-  const isComforting = AppState.currentMood <= 6;
+  const zoneClass = getMoodZone(AppState.currentMood);
   const showGreeting = AppState.showDashboardGreeting;
   const greetingDone = AppState.greetingAnimationDone;
   const todayFormatted = formatDate(getToday());
 
+  // Weekly mood arc mock trajectory (Mon - Sun)
+  const weekDays = [
+    { day: 'Mon', date: '08 Sep', score: 7 },
+    { day: 'Tue', date: '09 Sep', score: 8 },
+    { day: 'Wed', date: '10 Sep', score: 6 },
+    { day: 'Thu', date: '11 Sep', score: 8 },
+    { day: 'Fri', date: '12 Sep (Today)', score: AppState.currentMood, isToday: true },
+    { day: 'Sat', date: '13 Sep', score: 8 },
+    { day: 'Sun', date: '14 Sep', score: 9 },
+  ];
+
   return `
     <div class="dashboard-grid stagger-children">
-      <!-- Mood & Wellness Section (integrated from welcome screen) -->
-      <div class="dashboard-mood-wellness ${greetingDone || !showGreeting ? 'reveal' : ''}" id="dashboard-mood-section">
-        <div class="dashboard-mood-header">
-          <div class="dashboard-teacher-greeting">
-            <img src="${MOCK_DATA.user.avatarUrl}" alt="${MOCK_DATA.user.name}" class="dashboard-teacher-avatar" onerror="this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80'">
-            <div class="dashboard-teacher-info">
-              <h2>Good ${getGreeting()}, ${MOCK_DATA.user.name.split(' ')[0]}! 👋</h2>
-              <p>${MOCK_DATA.user.role} • ${MOCK_DATA.user.department} • Today: ${todayFormatted}</p>
+      <!-- Top Welcome Banner & Teacher Status -->
+      <div class="teacher-hero-header">
+        <div class="teacher-hero-profile">
+          <img src="${MOCK_DATA.user.avatarUrl}" alt="${MOCK_DATA.user.name}" class="teacher-hero-avatar" onerror="this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80'">
+          <div class="teacher-hero-details">
+            <div class="flex items-center gap-2 mb-1 flex-wrap">
+              <h1 class="teacher-hero-name">Good ${getGreeting()}, ${MOCK_DATA.user.name.split(' ')[0]}</h1>
+              <span class="badge badge-primary">Faculty Hub</span>
+              <span class="teacher-active-indicator"><span class="pulse-dot"></span> Active in Session</span>
             </div>
+            <p class="teacher-hero-meta">
+              ${MOCK_DATA.user.role} • ${MOCK_DATA.user.department} • <strong>${todayFormatted}</strong>
+            </p>
           </div>
-          <div class="dashboard-mood-badge">
-            <span>${getMoodEmoji(AppState.currentMood)}</span>
-            <span>${AppState.currentMood}/10 — ${getMoodLabel(AppState.currentMood)}</span>
+        </div>
+        <div class="teacher-hero-actions">
+          <button class="btn btn-secondary btn-sm" onclick="showMoodCheckInModal()">Calibrate Meter</button>
+          <button class="btn btn-primary btn-sm" onclick="AppState.navigate('journal')">Open Diary Safe</button>
+        </div>
+      </div>
+
+      <!-- Hero Viewport: Speedometer Mood & Pedagogical Energy Center -->
+      <div class="speedometer-hero-card ${greetingDone || !showGreeting ? 'reveal' : ''}" id="dashboard-mood-section">
+        <div class="speedometer-card-header">
+          <div>
+            <div class="speedometer-pill-badge">Faculty Wellbeing & Mindset Velocity</div>
+            <h2 class="speedometer-card-title">Teaching Energy & Mood Meter</h2>
+          </div>
+          <div class="speedo-header-zone-pill ${zoneClass}">
+            <span class="speedo-zone-dot"></span>
+            <span>${getMoodZoneLabel(AppState.currentMood)}</span>
           </div>
         </div>
 
-        <div class="dashboard-mood-tracker">
-          <div class="dashboard-mood-label">
-            <span>How are you feeling today?</span>
-            <button class="btn btn-glass btn-sm mood-checkin-btn" onclick="showMoodCheckInModal()">✨ Full Check-In</button>
-          </div>
-          <div class="mood-ratings-row">
-            ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(score => `
-              <div class="mood-btn ${AppState.currentMood === score ? 'selected' : ''}" onclick="selectMood(${score})">
-                <span class="mood-btn-emoji">${getMoodEmoji(score)}</span>
-                <span class="mood-btn-score">${score}</span>
+        <div class="speedometer-grid-main">
+          <!-- Left Column: The Interactive Speedometer Dial -->
+          <div class="speedometer-dial-panel">
+            ${renderSpeedometer(AppState.currentMood)}
+
+            <!-- Sleek 1-10 Numeric Velocity Selector (No Emojis) -->
+            <div class="speedo-selector-strip">
+              <span class="speedo-strip-label">Select Energy Velocity:</span>
+              <div class="speedo-pills-row">
+                ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(s => {
+                  const isSel = s === AppState.currentMood;
+                  const zone = getMoodZone(s);
+                  return `
+                    <button class="speedo-num-btn ${zone} ${isSel ? 'active' : ''}" onclick="selectMood(${s})" title="Set mood velocity to ${s}">
+                      ${s}
+                    </button>
+                  `;
+                }).join('')}
               </div>
-            `).join('')}
+            </div>
           </div>
-          <div class="quote-display-card">
-            <div class="quote-badge">${isComforting ? '🌿 A Comforting Message For You Today' : '✨ Your Daily Fuel & Momentum'}</div>
-            <div class="quote-text">"${quote.quote}"</div>
-            <div class="quote-author">
-              <span>— ${quote.author}</span>
-              <button class="quote-shuffle-btn" onclick="shuffleMoodQuote()">Another Quote 🔄</button>
+
+          <!-- Right Column: Daily Pedagogical Fuel & Pre-Class Reflection -->
+          <div class="speedometer-reflection-panel">
+            <!-- Pedagogical Quote / Insight Box -->
+            <div class="speedo-quote-card ${zoneClass}">
+              <div class="speedo-quote-header">
+                <span class="speedo-quote-badge">${quote.zoneLabel || getMoodLabel(AppState.currentMood)}</span>
+                <button class="quote-refresh-btn" onclick="shuffleMoodQuote()" title="Refresh Pedagogical Insight">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+                  New Insight
+                </button>
+              </div>
+              <blockquote class="speedo-quote-body">"${quote.quote}"</blockquote>
+              <div class="speedo-quote-author">— ${quote.author}</div>
+            </div>
+
+            <!-- Quick Pre-Class Reflection / Intention Logger -->
+            <div class="speedo-quick-reflection">
+              <div class="speedo-reflection-head">
+                <span class="speedo-reflection-label">Pre-Class Reflection & Intention</span>
+                <span class="speedo-reflection-sub">Auto-syncs to Private Safe</span>
+              </div>
+              <div class="speedo-reflection-input-wrap">
+                <input type="text" id="speedo-reflection-text" class="speedo-reflection-input" placeholder="Note your focus or pedagogical intention before class..." onkeydown="if(event.key==='Enter') saveSpeedoReflection();" />
+                <button class="btn btn-primary btn-sm" onclick="saveSpeedoReflection()">Log Note</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Dashboard Action Bar -->
-      <div class="dashboard-welcome ${greetingDone || !showGreeting ? '' : 'hidden-initially'}" id="dashboard-main-content">
-        <h2>Your Workspace Overview</h2>
-        <p>You have completed ${completedTasks} of ${totalTasks} work tasks today (${progressPercent}%). Your mood is ${getMoodEmoji(AppState.currentMood)} <strong>${getMoodLabel(AppState.currentMood)}</strong>.</p>
-        <div class="dashboard-welcome-actions">
-          <button class="btn btn-primary" onclick="showAddTaskModal()">+ Add Work Task</button>
-          <button class="btn btn-primary" onclick="AppState.navigate('journal')">🔒 Open Diary Safe</button>
+      <!-- Weekly Mood & Emotional Resilience Arc -->
+      <div class="card card-elevated" style="padding:24px 28px;">
+        <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <div>
+            <h3 style="font-size:1.15rem;font-weight:700;color:var(--neutral-900);margin:0 0 4px 0">Weekly Energy & Emotional Resilience Arc</h3>
+            <p class="text-xs text-muted" style="margin:0">Faculty vitality trajectory across the 7-day teaching cycle</p>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-xs font-semibold text-muted">Weekly Average: <strong style="color:var(--primary-700)">7.8 / 10 (Energized)</strong></span>
+          </div>
+        </div>
+
+        <div class="weekly-arc-row">
+          ${weekDays.map(item => {
+            const heightPercent = Math.round((item.score / 10) * 100);
+            const zClass = getMoodZone(item.score);
+            return `
+              <div class="weekly-arc-col ${item.isToday ? 'active-today' : ''}" onclick="selectMood(${item.score})" title="${item.day}: ${item.score}/10 — ${getMoodLabel(item.score)}">
+                <div class="weekly-arc-bar-wrap">
+                  <div class="weekly-arc-bar ${zClass}" style="height:${heightPercent}%">
+                    <span class="weekly-arc-score">${item.score}</span>
+                  </div>
+                </div>
+                <div class="weekly-arc-day">${item.day}</div>
+                <div class="weekly-arc-date">${item.date}</div>
+              </div>
+            `;
+          }).join('')}
         </div>
       </div>
 
-      <!-- Stat Cards (Schedule Removed) -->
+      <!-- Quick Faculty Vitality Metric Tiles (Clean SVGs, No Emojis) -->
       <div class="stats-grid">
-        <div class="card card-elevated stat-card" style="cursor:pointer" onclick="AppState.navigate('dashboard')">
-          <div class="stat-card-icon green">✓</div>
-          <div class="stat-card-info">
-            <div class="stat-card-label">Work Completed</div>
-            <div class="stat-card-value">${progressPercent}%</div>
-            <div class="stat-card-trend up">${completedTasks}/${totalTasks} tasks done</div>
+        <div class="card card-elevated stat-card" onclick="AppState.navigate('journal')" style="cursor:pointer">
+          <div class="stat-card-icon green">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
-        </div>
-        <div class="card card-elevated stat-card" style="cursor:pointer" onclick="AppState.navigate('journal')">
-          <div class="stat-card-icon cyan">🔒</div>
           <div class="stat-card-info">
-            <div class="stat-card-label">Safe Reflections</div>
+            <div class="stat-card-label">Diary Safe Reflections</div>
             <div class="stat-card-value">${safeCount}</div>
-            <div class="stat-card-trend up">Calendar safe entries</div>
+            <div class="stat-card-trend up">Private reflections recorded</div>
           </div>
         </div>
-        <div class="card card-elevated stat-card" style="cursor:pointer" onclick="AppState.navigate('syllabus')">
-          <div class="stat-card-icon blue">📋</div>
+
+        <div class="card card-elevated stat-card" onclick="AppState.navigate('dashboard')" style="cursor:pointer">
+          <div class="stat-card-icon cyan">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
           <div class="stat-card-info">
-            <div class="stat-card-label">Syllabus Progress</div>
+            <div class="stat-card-label">Teaching Periods Done</div>
+            <div class="stat-card-value">${completedTasks}/${totalTasks}</div>
+            <div class="stat-card-trend up">${progressPercent}% daily curriculum flow</div>
+          </div>
+        </div>
+
+        <div class="card card-elevated stat-card" onclick="AppState.navigate('syllabus')" style="cursor:pointer">
+          <div class="stat-card-icon blue">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </div>
+          <div class="stat-card-info">
+            <div class="stat-card-label">Syllabus Velocity</div>
             <div class="stat-card-value">${syllabusProgress}%</div>
-            <div class="stat-card-trend ${syllabusProgress >= 40 ? 'up' : 'down'}">${syllabusProgress >= 40 ? '↑ On track' : '↓ Needs attention'}</div>
+            <div class="stat-card-trend ${syllabusProgress >= 40 ? 'up' : 'down'}">${syllabusProgress >= 40 ? 'On Track' : 'Review Needed'}</div>
           </div>
         </div>
-        <div class="card card-elevated stat-card" style="cursor:pointer" onclick="AppState.navigate('students')">
-          <div class="stat-card-icon amber">👨‍🎓</div>
+
+        <div class="card card-elevated stat-card" onclick="AppState.navigate('students')" style="cursor:pointer">
+          <div class="stat-card-icon amber">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
           <div class="stat-card-info">
-            <div class="stat-card-label">Total Students</div>
+            <div class="stat-card-label">Students Mentored</div>
             <div class="stat-card-value">${totalStudents}</div>
-            <div class="stat-card-trend up">${MOCK_DATA.classes.length} active classes</div>
+            <div class="stat-card-trend up">${MOCK_DATA.classes.length} active literature sections</div>
           </div>
         </div>
       </div>
 
-      <!-- Main Row: Teacher Work Complete with Progress Bar & Task Reviews -->
+      <!-- Main Row: Today's Teaching Flow & Class Reflections -->
       <div class="dashboard-row">
-        <!-- Teacher Work & Progress -->
+        <!-- Teacher Teaching Sessions & Class Reviews -->
         <div class="card card-elevated teacher-work-card">
           <div class="card-header">
             <div>
-              <h3 class="card-title">Teacher Today's Work & Progress</h3>
-              <p class="text-xs text-muted mt-1">Track daily teaching responsibilities and record your classroom experience</p>
+              <h3 class="card-title">Today's Teaching Flow & Classroom Reflections</h3>
+              <p class="text-xs text-muted mt-1">Review your lessons, student discussions, and pedagogical observations</p>
             </div>
-            <button class="btn btn-primary btn-sm" onclick="showAddTaskModal()">+ Add Task</button>
+            <button class="btn btn-primary btn-sm" onclick="showAddTaskModal()">+ Add Lesson Period</button>
           </div>
           <div class="card-body">
             <!-- Live Progress Bar -->
             <div class="work-progress-box">
               <div class="work-progress-labels">
-                <span class="work-progress-title">Daily Work Completion Status</span>
-                <span class="work-progress-percent">${progressPercent}% (${completedTasks}/${totalTasks} Finished)</span>
+                <span class="work-progress-title">Daily Teaching Completion</span>
+                <span class="work-progress-percent">${progressPercent}% (${completedTasks}/${totalTasks} Periods Completed)</span>
               </div>
               <div class="progress-bar lg">
                 <div class="progress-bar-fill green" style="width:${progressPercent}%;transition:width 0.4s ease"></div>
@@ -1502,28 +1686,28 @@ function renderDashboard() {
                         <div class="task-meta">
                           <span class="badge badge-neutral">${task.className}</span>
                           <span class="badge badge-cyan">${task.subject}</span>
-                          <span>⏱️ ${task.timeEst}</span>
-                          ${task.completed ? '<span class="badge badge-green">Completed</span>' : '<span class="badge badge-amber">Pending</span>'}
+                          <span class="text-xs text-muted">Estimated: ${task.timeEst}</span>
+                          ${task.completed ? '<span class="badge badge-green">Delivered</span>' : '<span class="badge badge-amber">Upcoming</span>'}
                         </div>
                       </div>
                     </div>
 
                     <!-- Experience / Review Field after each task -->
                     <div class="task-review-box">
-                      <div class="text-xs font-semibold text-muted mb-1">RECORD REVIEW / EXPERIENCE:</div>
+                      <div class="text-xs font-semibold text-muted mb-1">TEACHING EXPERIENCE & NOTES:</div>
                       ${showReviewInput ? `
                         <div class="task-review-input-row">
                           <input type="text" class="task-review-input" id="review-input-${task.id}"
-                                 placeholder="Record how this task went, student reactions, or notes..."
+                                 placeholder="Record how this lesson went, student discourse, or insights..."
                                  value="${task.review ? task.review.replace(/"/g, '&quot;') : ''}">
-                          <button class="btn btn-primary btn-sm" onclick="saveTaskReview('${task.id}')">Save Review</button>
+                          <button class="btn btn-primary btn-sm" onclick="saveTaskReview('${task.id}')">Save Notes</button>
                         </div>
                       ` : `
                         <div class="saved-review-badge">
                           <div style="flex:1">
-                            <strong>Teacher Experience:</strong> "${task.review}"
+                            <strong>Class Observation:</strong> "${task.review}"
                           </div>
-                          <button class="btn btn-ghost btn-xs" onclick="editTaskReview('${task.id}')" title="Edit Review">✏️ Edit</button>
+                          <button class="btn btn-ghost btn-xs" onclick="editTaskReview('${task.id}')" title="Edit Review">Edit</button>
                         </div>
                       `}
                     </div>
@@ -1534,39 +1718,13 @@ function renderDashboard() {
           </div>
         </div>
 
-        <!-- Quick Actions & Safe Highlights -->
+        <!-- Quick Navigation & Diary Safe Highlights -->
         <div class="flex flex-col gap-5">
-          <div class="card card-elevated">
-            <div class="card-header">
-              <h3 class="card-title">Quick Actions</h3>
-            </div>
-            <div class="card-body">
-              <div class="quick-actions-grid">
-                <div class="quick-action-item" onclick="AppState.navigate('students')">
-                  <div class="quick-action-icon stat-card-icon blue">👨‍🎓</div>
-                  <div class="quick-action-text">Manage Students<span>Add & diagnose quizzes</span></div>
-                </div>
-                <div class="quick-action-item" onclick="AppState.navigate('journal')">
-                  <div class="quick-action-icon stat-card-icon green">🔒</div>
-                  <div class="quick-action-text">Diary Safe<span>Calendar & emoji stickers</span></div>
-                </div>
-                <div class="quick-action-item" onclick="AppState.navigate('materials')">
-                  <div class="quick-action-icon stat-card-icon cyan">📚</div>
-                  <div class="quick-action-text">Materials & Logs<span>Resources & lesson records</span></div>
-                </div>
-                <div class="quick-action-item" onclick="AppState.navigate('syllabus')">
-                  <div class="quick-action-icon stat-card-icon amber">📋</div>
-                  <div class="quick-action-text">Syllabus Tracker<span>Update & delete topics</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
           <!-- Safe Highlights Card -->
           <div class="card card-elevated">
             <div class="card-header">
-              <h3 class="card-title">Personal Diary Safe Highlights</h3>
-              <button class="btn btn-ghost btn-sm" onclick="AppState.navigate('journal')">Open Safe 🔒</button>
+              <h3 class="card-title">Recent Diary Safe Highlights</h3>
+              <button class="btn btn-ghost btn-sm" onclick="AppState.navigate('journal')">Open Safe</button>
             </div>
             <div class="card-body">
               <div class="activity-list">
@@ -1575,12 +1733,47 @@ function renderDashboard() {
                     <div class="activity-dot green"></div>
                     <div>
                       <div class="activity-text">
-                        <strong>${entry.title}</strong> <span style="font-size:1.1rem">${entry.emojiStickers.join(' ')}</span>
+                        <strong>${entry.title}</strong>
                       </div>
-                      <div class="activity-time">${formatDate(entry.date)} • Mood: ${entry.moodScore}/10</div>
+                      <div class="activity-time">${formatDate(entry.date)} • Velocity: ${entry.moodScore}/10</div>
                     </div>
                   </div>
                 `).join('')}
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Navigation Panel -->
+          <div class="card card-elevated">
+            <div class="card-header">
+              <h3 class="card-title">Quick Workspace Navigation</h3>
+            </div>
+            <div class="card-body">
+              <div class="quick-actions-grid">
+                <div class="quick-action-item" onclick="AppState.navigate('materials')">
+                  <div class="quick-action-icon stat-card-icon cyan">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  </div>
+                  <div class="quick-action-text">Materials & Logs<span>Literature texts & slides</span></div>
+                </div>
+                <div class="quick-action-item" onclick="AppState.navigate('syllabus')">
+                  <div class="quick-action-icon stat-card-icon amber">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                  </div>
+                  <div class="quick-action-text">Syllabus Tracker<span>Track syllabus pacing</span></div>
+                </div>
+                <div class="quick-action-item" onclick="AppState.navigate('students')">
+                  <div class="quick-action-icon stat-card-icon blue">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                  </div>
+                  <div class="quick-action-text">Students & Quizzes<span>View student progress</span></div>
+                </div>
+                <div class="quick-action-item" onclick="AppState.navigate('reports')">
+                  <div class="quick-action-icon stat-card-icon green">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                  </div>
+                  <div class="quick-action-text">Academic Reports<span>Term grade metrics</span></div>
+                </div>
               </div>
             </div>
           </div>
@@ -4119,7 +4312,7 @@ function renderProfile() {
         <p>Faculty credentials, teaching assignments, and professional records</p>
       </div>
       <div class="page-header-actions">
-        <button class="btn btn-primary" onclick="showEditProfileModal()">✏️ Edit Profile</button>
+        <button class="btn btn-primary" onclick="showEditProfileModal()">Edit Profile</button>
         <button class="btn btn-secondary" onclick="AppState.logout()">Sign Out</button>
       </div>
     </div>
@@ -4146,7 +4339,7 @@ function renderProfile() {
       <!-- Contact & Personal Card -->
       <div class="card card-elevated" style="padding:24px">
         <h3 style="font-size:var(--font-size-lg);font-weight:700;margin-bottom:16px;color:var(--neutral-900);display:flex;align-items:center;gap:8px">
-          <span>📇</span> Contact & Academic Info
+          Contact & Academic Info
         </h3>
         <div class="flex flex-col gap-3">
           <div class="flex justify-between py-2" style="border-bottom:1px solid var(--neutral-200)">
@@ -4175,7 +4368,7 @@ function renderProfile() {
       <!-- Teaching Assignments & Accolades -->
       <div class="card card-elevated" style="padding:24px">
         <h3 style="font-size:var(--font-size-lg);font-weight:700;margin-bottom:16px;color:var(--neutral-900);display:flex;align-items:center;gap:8px">
-          <span>🏆</span> Teaching Portfolio & Honors
+          Teaching Portfolio & Honors
         </h3>
         
         <div class="mb-4">
@@ -4205,11 +4398,11 @@ function renderProfile() {
     <div class="card card-elevated" style="padding:24px;background:var(--neutral-50);display:flex;justify-content:space-between;align-items:center">
       <div>
         <h4 style="font-size:var(--font-size-base);font-weight:700;margin:0 0 4px 0">Need to record your personal reflection or daily mind state?</h4>
-        <p class="text-xs text-muted" style="margin:0">Visit your private daily diary safe or check in on your morning mood.</p>
+        <p class="text-xs text-muted" style="margin:0">Visit your private daily diary safe or calibrate your energy velocity on the dashboard.</p>
       </div>
       <div class="flex gap-3">
-        <button class="btn btn-secondary" onclick="AppState.navigate('journal')">Open Diary Safe 🔒</button>
-        <button class="btn btn-primary" onclick="AppState.navigate('welcome')">Daily Mood Check-in ✨</button>
+        <button class="btn btn-secondary" onclick="AppState.navigate('journal')">Open Diary Safe</button>
+        <button class="btn btn-primary" onclick="AppState.navigate('dashboard')">Energy Speedometer</button>
       </div>
     </div>
   `;
@@ -4256,31 +4449,31 @@ function showEditProfileModal() {
       <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
       <button class="btn btn-primary" onclick="saveProfileChanges()">Save Profile</button>
     </div>
-  `, 'lg');
+  `, 'md');
 }
 
 function saveProfileChanges() {
-  const name = document.getElementById('prof-name')?.value?.trim();
-  const phone = document.getElementById('prof-phone')?.value?.trim();
-  const email = document.getElementById('prof-email')?.value?.trim();
-  const qualification = document.getElementById('prof-qual')?.value?.trim();
-  const address = document.getElementById('prof-address')?.value?.trim();
-  const bio = document.getElementById('prof-bio')?.value?.trim();
+  const name = document.getElementById('prof-name')?.value.trim();
+  const phone = document.getElementById('prof-phone')?.value.trim();
+  const email = document.getElementById('prof-email')?.value.trim();
+  const qual = document.getElementById('prof-qual')?.value.trim();
+  const address = document.getElementById('prof-address')?.value.trim();
+  const bio = document.getElementById('prof-bio')?.value.trim();
 
-  if (!name) {
-    showToast('Error', 'Name cannot be empty', 'error');
+  if (!name || !email) {
+    showToast('Missing Fields', 'Name and Email are required.', 'error');
     return;
   }
 
   MOCK_DATA.user.name = name;
-  if (phone) MOCK_DATA.user.phone = phone;
-  if (email) MOCK_DATA.user.email = email;
-  if (qualification) MOCK_DATA.user.qualification = qualification;
-  if (address) MOCK_DATA.user.address = address;
-  if (bio) MOCK_DATA.user.bio = bio;
+  MOCK_DATA.user.phone = phone || MOCK_DATA.user.phone;
+  MOCK_DATA.user.email = email;
+  MOCK_DATA.user.qualification = qual || MOCK_DATA.user.qualification;
+  MOCK_DATA.user.address = address || MOCK_DATA.user.address;
+  MOCK_DATA.user.bio = bio || MOCK_DATA.user.bio;
 
   closeModal();
-  showToast('Profile Updated', 'Your teacher profile has been updated.', 'success');
+  showToast('Profile Updated', 'Faculty details updated successfully.', 'success');
   renderApp();
 }
 
@@ -4312,10 +4505,10 @@ function showTeacherProfileModal() {
         <div class="card" style="padding:14px;background:var(--neutral-50);border:1px solid var(--neutral-200);border-radius:var(--radius-lg)">
           <div class="text-xs font-bold text-muted uppercase mb-2">Contact & Campus Info</div>
           <div class="text-xs flex flex-col gap-1 text-neutral-800">
-            <div>📧 <strong>Email:</strong> ${u.email}</div>
-            <div>📞 <strong>Phone:</strong> ${u.phone}</div>
-            <div>🎓 <strong>Qualifications:</strong> ${u.qualification}</div>
-            <div>📍 <strong>Address:</strong> ${u.address}</div>
+            <div><strong>Email:</strong> ${u.email}</div>
+            <div><strong>Phone:</strong> ${u.phone}</div>
+            <div><strong>Qualifications:</strong> ${u.qualification}</div>
+            <div><strong>Address:</strong> ${u.address}</div>
           </div>
         </div>
 
@@ -4332,7 +4525,7 @@ function showTeacherProfileModal() {
             </div>
             <div>
               <span class="text-muted font-semibold">Honors: </span>
-              <span class="text-neutral-800">${u.achievements?.[0] || 'National STEM Mentor'}</span>
+              <span class="text-neutral-800">${u.achievements?.[0] || 'National Literature Mentor'}</span>
             </div>
           </div>
         </div>
@@ -4342,7 +4535,7 @@ function showTeacherProfileModal() {
       <button class="btn btn-secondary btn-sm" onclick="closeModal(); AppState.logout();" style="color:var(--danger-500)">Sign Out</button>
       <div class="flex gap-2">
         <button class="btn btn-secondary btn-sm" onclick="closeModal()">Close</button>
-        <button class="btn btn-primary btn-sm" onclick="closeModal(); showEditProfileModal()">✏️ Edit Profile</button>
+        <button class="btn btn-primary btn-sm" onclick="closeModal(); showEditProfileModal()">Edit Profile</button>
       </div>
     </div>
   `, 'lg');
