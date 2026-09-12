@@ -4037,34 +4037,34 @@ body.sidebar-resizing .main-content {
   box-shadow: 0 0 8px currentColor;
 }
 
-/* Zone Color Variations */
+/* Zone Color Variations — Dark Peach Aesthetic */
 .zone-recharge {
-  background: rgba(231, 136, 96, 0.16);
-  color: #8D4920;
-  border: 1px solid rgba(231, 136, 96, 0.45);
+  background: rgba(243, 156, 116, 0.18);
+  color: #C25624;
+  border: 1px solid rgba(243, 156, 116, 0.5);
 }
-.zone-recharge .speedo-zone-dot { background: #E78860; color: #E78860; }
+.zone-recharge .speedo-zone-dot { background: #DF6F3D; color: #DF6F3D; }
 
 .zone-steady {
-  background: rgba(232, 181, 104, 0.18);
-  color: #8A5B20;
-  border: 1px solid rgba(232, 181, 104, 0.45);
+  background: rgba(235, 128, 78, 0.18);
+  color: #B54512;
+  border: 1px solid rgba(235, 128, 78, 0.5);
 }
-.zone-steady .speedo-zone-dot { background: #E8B568; color: #E8B568; }
+.zone-steady .speedo-zone-dot { background: #EB804E; color: #EB804E; }
 
 .zone-energized {
-  background: rgba(153, 181, 112, 0.2);
-  color: #445E24;
-  border: 1px solid rgba(153, 181, 112, 0.45);
+  background: rgba(224, 105, 53, 0.2);
+  color: #9E380A;
+  border: 1px solid rgba(224, 105, 53, 0.55);
 }
-.zone-energized .speedo-zone-dot { background: #7C9848; color: #7C9848; }
+.zone-energized .speedo-zone-dot { background: #E06935; color: #E06935; }
 
 .zone-peak {
-  background: rgba(70, 150, 88, 0.2);
-  color: #24522B;
-  border: 1px solid rgba(70, 150, 88, 0.45);
+  background: rgba(212, 84, 34, 0.22);
+  color: #8C2C05;
+  border: 1px solid rgba(212, 84, 34, 0.6);
 }
-.zone-peak .speedo-zone-dot { background: #469658; color: #469658; }
+.zone-peak .speedo-zone-dot { background: #D45422; color: #D45422; }
 
 /* Speedometer Main Grid Layout */
 .speedometer-grid-main {
@@ -4423,10 +4423,10 @@ body.sidebar-resizing .main-content {
   color: #FFFFFF;
 }
 
-.weekly-arc-bar.zone-recharge { background: linear-gradient(180deg, #DCA278, #C87A4A); }
-.weekly-arc-bar.zone-steady { background: linear-gradient(180deg, #E8BA85, #C68E50); }
-.weekly-arc-bar.zone-energized { background: linear-gradient(180deg, #9EB07A, #758E4E); }
-.weekly-arc-bar.zone-peak { background: linear-gradient(180deg, #689A65, #41733E); }
+.weekly-arc-bar.zone-recharge { background: linear-gradient(180deg, #F39C74, #DF6F3D); box-shadow: 0 2px 8px rgba(223, 111, 61, 0.25); }
+.weekly-arc-bar.zone-steady { background: linear-gradient(180deg, #EB804E, #CD5B27); box-shadow: 0 2px 8px rgba(205, 91, 39, 0.25); }
+.weekly-arc-bar.zone-energized { background: linear-gradient(180deg, #E06935, #BD4513); box-shadow: 0 2px 8px rgba(189, 69, 19, 0.25); }
+.weekly-arc-bar.zone-peak { background: linear-gradient(180deg, #D45422, #A8360B); box-shadow: 0 2px 8px rgba(168, 54, 11, 0.25); }
 
 .weekly-arc-day {
   font-size: var(--font-size-xs);

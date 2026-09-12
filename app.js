@@ -539,12 +539,12 @@ function renderSpeedometer(score, containerId = 'speedometer-widget-main') {
       <div class="speedometer-dial-container" title="Drag needle or click dial to calibrate teaching velocity">
         <svg viewBox="0 0 340 192" class="speedometer-svg" id="${containerId}-svg" aria-label="Teacher Mood Meter Gauge">
           <defs>
-            <!-- Smooth Continuous Multi-Stop Gradient -->
+            <!-- Rich Dark Peach Multi-Stop Gradient -->
             <linearGradient id="speedoTrackGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#E28B65" />
-              <stop offset="30%" stop-color="#E5AF64" />
-              <stop offset="65%" stop-color="#8DB268" />
-              <stop offset="100%" stop-color="#409455" />
+              <stop offset="0%" stop-color="#F5A782" />
+              <stop offset="30%" stop-color="#EB7E4E" />
+              <stop offset="65%" stop-color="#DD602D" />
+              <stop offset="100%" stop-color="#BA3F0E" />
             </linearGradient>
 
             <filter id="speedoNeedleShadow" x="-20%" y="-20%" width="140%" height="140%">
