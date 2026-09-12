@@ -295,6 +295,12 @@ function updateDashboardReflectionQuote(score) {
   }
 }
 
+function getAngleForScore(score) {
+  // Range from score 1 (-75deg) to score 10 (+75deg)
+  // Each step is 150 / 9 = 16.6667 deg
+  return -75 + (score - 1) * (150 / 9);
+}
+
 function getScoreFromEvent(e, svgEl) {
   const rect = svgEl.getBoundingClientRect();
   const svgX = ((e.clientX - rect.left) / rect.width) * 340;
@@ -325,16 +331,18 @@ function runSpeedometerSweepAnimation(containerId = 'speedometer-widget-main') {
   AppState.speedometerSwept = true;
 
   // Phase 0: Start needle at 1 (-75deg)
+  const angle1 = getAngleForScore(1);
   needle.style.transition = 'none';
-  needle.style.transform = 'rotate(-75deg)';
+  needle.style.transform = `rotate(${angle1}deg)`;
   if (valDisplay) valDisplay.textContent = '1';
   updateSpeedoZoneDOM(zoneDisplay, zoneTxt, 1);
 
   // Phase 1: Smooth, rapid power sweep to 10 (+75deg) over 850ms
   requestAnimationFrame(() => {
     setTimeout(() => {
+      const angle10 = getAngleForScore(10);
       needle.style.transition = 'transform 0.85s cubic-bezier(0.16, 1, 0.3, 1.1)';
-      needle.style.transform = 'rotate(75deg)';
+      needle.style.transform = `rotate(${angle10}deg)`;
       
       let startTime = performance.now();
       function countUp(now) {
@@ -346,10 +354,11 @@ function runSpeedometerSweepAnimation(containerId = 'speedometer-widget-main') {
       }
       requestAnimationFrame(countUp);
 
-      // Phase 2: Pause at 10, then smoothly sweep back to 5 (0deg) over 750ms
+      // Phase 2: Pause at 10, then smoothly sweep back to exactly 5 (-8.333deg) over 750ms
       setTimeout(() => {
+        const angle5 = getAngleForScore(5);
         needle.style.transition = 'transform 0.75s cubic-bezier(0.34, 1.3, 0.64, 1)';
-        needle.style.transform = 'rotate(0deg)'; // 0deg corresponds to score 5
+        needle.style.transform = `rotate(${angle5}deg)`;
 
         let startBackTime = performance.now();
         function countDown(now) {
@@ -434,8 +443,8 @@ function initSpeedometerInteractivity(containerId = 'speedometer-widget-main') {
     svg.style.cursor = 'grab';
     const score = updateGaugeVisuals(e, false);
     
-    // Snap needle to discrete integer score angle
-    const snapAngle = -75 + (score - 1) * (150 / 9);
+    // Snap needle exactly to the discrete tick angle for this score
+    const snapAngle = getAngleForScore(score);
     needle.style.transition = 'transform 0.35s cubic-bezier(0.34, 1.35, 0.64, 1)';
     needle.style.transform = `rotate(${snapAngle}deg)`;
 
@@ -461,11 +470,11 @@ function initSpeedometerInteractivity(containerId = 'speedometer-widget-main') {
 }
 
 function renderSpeedometer(score, containerId = 'speedometer-widget-main') {
-  const angle = -75 + (score - 1) * (150 / 9);
+  const angle = getAngleForScore(score);
   
   // Ticks calculation around 150-degree semi-arc
   const ticks = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(s => {
-    const a = -75 + (s - 1) * (150 / 9);
+    const a = getAngleForScore(s);
     const rad = (a - 90) * Math.PI / 180;
     const x1 = Math.round(170 + 96 * Math.cos(rad));
     const y1 = Math.round(152 + 96 * Math.sin(rad));
