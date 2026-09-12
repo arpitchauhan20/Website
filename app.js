@@ -1607,6 +1607,14 @@ function editTaskReview(taskId) {
   }
 }
 
+function cancelTaskReview(taskId) {
+  const task = MOCK_DATA.teacherTasks.find(t => t.id === taskId);
+  if (task) {
+    task.isEditingReview = false;
+    renderApp();
+  }
+}
+
 function showAddTaskModal() {
   showModal(`
     <div class="modal-header">
@@ -1698,23 +1706,12 @@ function renderDashboard() {
   const greetingDone = AppState.greetingAnimationDone;
   const todayFormatted = formatDate(getToday());
 
-  // Weekly mood arc mock trajectory (Mon - Sun)
-  const weekDays = [
-    { day: 'Mon', date: '08 Sep', score: 7 },
-    { day: 'Tue', date: '09 Sep', score: 8 },
-    { day: 'Wed', date: '10 Sep', score: 6 },
-    { day: 'Thu', date: '11 Sep', score: 8 },
-    { day: 'Fri', date: '12 Sep (Today)', score: AppState.currentMood, isToday: true },
-    { day: 'Sat', date: '13 Sep', score: 8 },
-    { day: 'Sun', date: '14 Sep', score: 9 },
-  ];
-
   return `
     <div class="dashboard-grid stagger-children">
       <!-- Top Welcome Banner & Teacher Status -->
       <div class="teacher-hero-header">
         <div class="teacher-hero-profile">
-          <img src="${MOCK_DATA.user.avatarUrl}" alt="${MOCK_DATA.user.name}" class="teacher-hero-avatar" onerror="this.src='https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80'">
+          <img src="${MOCK_DATA.user.avatarUrl}" alt="${MOCK_DATA.user.name}" class="teacher-hero-avatar" onerror="this.src='ishita-avatar.jpg'">
           <div class="teacher-hero-details">
             <div class="flex items-center gap-2 mb-1 flex-wrap">
               <h1 class="teacher-hero-name">Good ${getGreeting()}, ${MOCK_DATA.user.name.split(' ')[0]}</h1>
@@ -1773,7 +1770,7 @@ function renderDashboard() {
                 <span class="speedo-reflection-sub">Auto-syncs to Private Safe</span>
               </div>
               <div class="speedo-reflection-input-wrap">
-                <input type="text" id="speedo-reflection-text" class="speedo-reflection-input" placeholder="Note your focus or pedagogical intention before class..." onkeydown="if(event.key==='Enter') saveSpeedoReflection();" />
+                <input type="text" id="speedo-reflection-text" class="speedo-reflection-input" placeholder="Note your focus or intention before class..." onkeydown="if(event.key==='Enter') saveSpeedoReflection();" />
                 <button class="btn btn-primary btn-sm" onclick="saveSpeedoReflection()">Log Note</button>
               </div>
             </div>
@@ -1781,38 +1778,7 @@ function renderDashboard() {
         </div>
       </div>
 
-      <!-- Weekly Mood & Emotional Resilience Arc -->
-      <div class="card card-elevated" style="padding:24px 28px;">
-        <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
-          <div>
-            <h3 style="font-size:1.15rem;font-weight:700;color:var(--neutral-900);margin:0 0 4px 0">Weekly Energy & Emotional Resilience Arc</h3>
-            <p class="text-xs text-muted" style="margin:0">Faculty vitality trajectory across the 7-day teaching cycle</p>
-          </div>
-          <div class="flex items-center gap-3">
-            <span class="text-xs font-semibold text-muted">Weekly Average: <strong style="color:var(--primary-700)">7.8 / 10 (Energized)</strong></span>
-          </div>
-        </div>
-
-        <div class="weekly-arc-row">
-          ${weekDays.map(item => {
-            const heightPercent = Math.round((item.score / 10) * 100);
-            const zClass = getMoodZone(item.score);
-            return `
-              <div class="weekly-arc-col ${item.isToday ? 'active-today' : ''}" onclick="selectMood(${item.score})" title="${item.day}: ${item.score}/10 — ${getMoodLabel(item.score)}">
-                <div class="weekly-arc-bar-wrap">
-                  <div class="weekly-arc-bar ${zClass}" style="height:${heightPercent}%">
-                    <span class="weekly-arc-score">${item.score}</span>
-                  </div>
-                </div>
-                <div class="weekly-arc-day">${item.day}</div>
-                <div class="weekly-arc-date">${item.date}</div>
-              </div>
-            `;
-          }).join('')}
-        </div>
-      </div>
-
-      <!-- Quick Faculty Vitality Metric Tiles (Clean SVGs, No Emojis) -->
+      <!-- Quick Faculty Vitality Metric Tiles -->
       <div class="stats-grid">
         <div class="card card-elevated stat-card" onclick="AppState.navigate('journal')" style="cursor:pointer">
           <div class="stat-card-icon green">
@@ -1832,7 +1798,7 @@ function renderDashboard() {
           <div class="stat-card-info">
             <div class="stat-card-label">Teaching Periods Done</div>
             <div class="stat-card-value">${completedTasks}/${totalTasks}</div>
-            <div class="stat-card-trend up">${progressPercent}% daily curriculum flow</div>
+            <div class="stat-card-trend up">${progressPercent}% daily flow</div>
           </div>
         </div>
 
@@ -1854,42 +1820,43 @@ function renderDashboard() {
           <div class="stat-card-info">
             <div class="stat-card-label">Students Mentored</div>
             <div class="stat-card-value">${totalStudents}</div>
-            <div class="stat-card-trend up">${MOCK_DATA.classes.length} active literature sections</div>
+            <div class="stat-card-trend up">${MOCK_DATA.classes.length} active sections</div>
           </div>
         </div>
       </div>
 
-      <!-- Main Row: Today's Teaching Flow & Class Reflections -->
+      <!-- Main Row: Today's Teaching Flow & Recent Diary Highlights -->
       <div class="dashboard-row">
-        <!-- Teacher Teaching Sessions & Class Reviews -->
+        <!-- Today's Teaching Flow (Clean, streamlined) -->
         <div class="card card-elevated teacher-work-card">
           <div class="card-header">
             <div>
-              <h3 class="card-title">Today's Teaching Flow & Classroom Reflections</h3>
-              <p class="text-xs text-muted mt-1">Review your lessons, student discussions, and pedagogical observations</p>
+              <h3 class="card-title">Today's Teaching Flow</h3>
+              <p class="text-xs text-muted mt-1">Track and check off your daily lesson periods</p>
             </div>
-            <button class="btn btn-primary btn-sm" onclick="showAddTaskModal()">+ Add Lesson Period</button>
+            <button class="btn btn-primary btn-sm" onclick="showAddTaskModal()">+ Add Period</button>
           </div>
           <div class="card-body">
-            <!-- Live Progress Bar -->
+            <!-- Progress Bar -->
             <div class="work-progress-box">
               <div class="work-progress-labels">
                 <span class="work-progress-title">Daily Teaching Completion</span>
-                <span class="work-progress-percent">${progressPercent}% (${completedTasks}/${totalTasks} Periods Completed)</span>
+                <span class="work-progress-percent">${progressPercent}% (${completedTasks}/${totalTasks} Completed)</span>
               </div>
               <div class="progress-bar lg">
                 <div class="progress-bar-fill green" style="width:${progressPercent}%;transition:width 0.4s ease"></div>
               </div>
             </div>
 
-            <!-- Task List with Reviews -->
+            <!-- Task List -->
             <div class="task-list">
               ${MOCK_DATA.teacherTasks.map(task => {
-                const showReviewInput = task.isEditingReview || !task.review;
+                const isEditing = task.isEditingReview;
+                const hasReview = Boolean(task.review && task.review.trim());
                 return `
                   <div class="task-item-container ${task.completed ? 'completed' : ''}" id="task-${task.id}">
                     <div class="task-main-row">
-                      <div class="task-checkbox-custom ${task.completed ? 'checked' : ''}" onclick="toggleTeacherTask('${task.id}')">
+                      <div class="task-checkbox-custom ${task.completed ? 'checked' : ''}" onclick="toggleTeacherTask('${task.id}')" title="Mark period complete">
                         ${task.completed ? '✓' : ''}
                       </div>
                       <div class="task-content">
@@ -1897,31 +1864,38 @@ function renderDashboard() {
                         <div class="task-meta">
                           <span class="badge badge-neutral">${task.className}</span>
                           <span class="badge badge-cyan">${task.subject}</span>
-                          <span class="text-xs text-muted">Estimated: ${task.timeEst}</span>
+                          <span class="text-xs text-muted">${task.timeEst}</span>
                           ${task.completed ? '<span class="badge badge-green">Delivered</span>' : '<span class="badge badge-amber">Upcoming</span>'}
                         </div>
                       </div>
+                      <div class="task-actions-right">
+                        ${!isEditing && !hasReview ? `
+                          <button class="btn btn-ghost btn-xs text-muted" onclick="editTaskReview('${task.id}')" title="Add Observation Note">+ Note</button>
+                        ` : ''}
+                      </div>
                     </div>
 
-                    <!-- Experience / Review Field after each task -->
-                    <div class="task-review-box">
-                      <div class="text-xs font-semibold text-muted mb-1">TEACHING EXPERIENCE & NOTES:</div>
-                      ${showReviewInput ? `
+                    <!-- Observation Note (Shown only on-demand) -->
+                    ${isEditing ? `
+                      <div class="task-review-box mt-2">
                         <div class="task-review-input-row">
                           <input type="text" class="task-review-input" id="review-input-${task.id}"
-                                 placeholder="Record how this lesson went, student discourse, or insights..."
+                                 placeholder="Record observation or student discourse..."
                                  value="${task.review ? task.review.replace(/"/g, '&quot;') : ''}">
-                          <button class="btn btn-primary btn-sm" onclick="saveTaskReview('${task.id}')">Save Notes</button>
+                          <button class="btn btn-primary btn-sm" onclick="saveTaskReview('${task.id}')">Save</button>
+                          <button class="btn btn-secondary btn-sm" onclick="cancelTaskReview('${task.id}')">Cancel</button>
                         </div>
-                      ` : `
+                      </div>
+                    ` : hasReview ? `
+                      <div class="task-review-box mt-2">
                         <div class="saved-review-badge">
-                          <div style="flex:1">
-                            <strong>Class Observation:</strong> "${task.review}"
+                          <div style="flex:1;font-size:0.82rem">
+                            <strong>Note:</strong> "${task.review}"
                           </div>
-                          <button class="btn btn-ghost btn-xs" onclick="editTaskReview('${task.id}')" title="Edit Review">Edit</button>
+                          <button class="btn btn-ghost btn-xs" onclick="editTaskReview('${task.id}')" title="Edit Note">Edit</button>
                         </div>
-                      `}
-                    </div>
+                      </div>
+                    ` : ''}
                   </div>
                 `;
               }).join('')}
@@ -1929,12 +1903,14 @@ function renderDashboard() {
           </div>
         </div>
 
-        <!-- Quick Navigation & Diary Safe Highlights -->
+        <!-- Recent Diary Safe Highlights -->
         <div class="flex flex-col gap-5">
-          <!-- Safe Highlights Card -->
           <div class="card card-elevated">
             <div class="card-header">
-              <h3 class="card-title">Recent Diary Safe Highlights</h3>
+              <div>
+                <h3 class="card-title">Recent Diary Safe Highlights</h3>
+                <p class="text-xs text-muted mt-1">Encrypted personal teaching logs</p>
+              </div>
               <button class="btn btn-ghost btn-sm" onclick="AppState.navigate('journal')">Open Safe</button>
             </div>
             <div class="card-body">
@@ -1950,41 +1926,6 @@ function renderDashboard() {
                     </div>
                   </div>
                 `).join('')}
-              </div>
-            </div>
-          </div>
-
-          <!-- Quick Navigation Panel -->
-          <div class="card card-elevated">
-            <div class="card-header">
-              <h3 class="card-title">Quick Workspace Navigation</h3>
-            </div>
-            <div class="card-body">
-              <div class="quick-actions-grid">
-                <div class="quick-action-item" onclick="AppState.navigate('materials')">
-                  <div class="quick-action-icon stat-card-icon cyan">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                  </div>
-                  <div class="quick-action-text">Materials & Logs<span>Literature texts & slides</span></div>
-                </div>
-                <div class="quick-action-item" onclick="AppState.navigate('syllabus')">
-                  <div class="quick-action-icon stat-card-icon amber">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                  </div>
-                  <div class="quick-action-text">Syllabus Tracker<span>Track syllabus pacing</span></div>
-                </div>
-                <div class="quick-action-item" onclick="AppState.navigate('students')">
-                  <div class="quick-action-icon stat-card-icon blue">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-                  </div>
-                  <div class="quick-action-text">Students & Quizzes<span>View student progress</span></div>
-                </div>
-                <div class="quick-action-item" onclick="AppState.navigate('reports')">
-                  <div class="quick-action-icon stat-card-icon green">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-                  </div>
-                  <div class="quick-action-text">Academic Reports<span>Term grade metrics</span></div>
-                </div>
               </div>
             </div>
           </div>
